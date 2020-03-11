@@ -63,3 +63,4 @@ superAdminSchema.methods.correctPassword = async function (candidatePassword, us
 };
 const SuperAdmin = mongoose_1.default.model('SuperAdmin', superAdminSchema);
 exports.default = SuperAdmin;
+//# sourceMappingURL=superAdminModel.js.map

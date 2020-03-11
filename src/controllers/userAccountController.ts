@@ -100,7 +100,7 @@ export const getUserAccount = catchAsync(async (req, res, next) => {
 
 export const statusCheck: RequestHandler = (req, res, next) => {
   res.status(200).json({
-    status: 'RUNNING'
+    status: 'ACTIVE'
   });
 };
 

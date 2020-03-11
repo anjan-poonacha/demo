@@ -169,3 +169,4 @@ userAccountSchema.methods.correctPassword = async function (candidatePassword, u
 };
 const UserAccount = mongoose_1.default.model('UserAccount', userAccountSchema);
 exports.default = UserAccount;
+//# sourceMappingURL=userAccountModel.js.map

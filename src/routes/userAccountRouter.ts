@@ -7,13 +7,16 @@ const router = express.Router();
 
 router.get('/statusCheck', userController.statusCheck);
 
-router.get('/:email', userController.getUserAccount);
-
+router.get('/protect', authController.protect);
 router.post('/login', userController.login);
-router.post('/userAccount', userController.createUserAccount);
 
+router.post(
+  '/userAccount',
+  authController.protect,
+  userController.createUserAccount
+);
 router.get('/nid/getCitizen', userController.getCitizen);
 
-router.get('/protect', authController.protect);
+router.get('/:email', userController.getUserAccount);
 
 export default router;
