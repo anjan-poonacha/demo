@@ -12,7 +12,7 @@ router.post('/login', userController.login);
 
 router.post(
   '/userAccount',
-  authController.protect,
+  authController.protectUserAccount,
   userController.createUserAccount
 );
 router.get('/nid/getCitizen', userController.getCitizen);

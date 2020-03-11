@@ -46,4 +46,24 @@ exports.protect = catchAsync_1.default(async (req, res, next) => {
         user: currentUser
     });
 });
+exports.protectUserAccount = catchAsync_1.default(async (req, res, next) => {
+    let token;
+    const { headers } = req;
+    if (headers.authorization && headers.authorization.startsWith('Bearer')) {
+        token = headers.authorization.split(' ')[1];
+    }
+    const decoded = await util_1.promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    let currentUser;
+    if (decoded.role === 'superadmin') {
+        currentUser = await superAdminModel_1.default.findById(decoded.id);
+    }
+    else {
+        currentUser = await userAccountModel_1.default.findById(decoded.id);
+    }
+    if (!currentUser) {
+        return next(new appError_1.default("The User belonging to this token doesn't exists", 401));
+    }
+    req.user = currentUser;
+    next();
+});
 //# sourceMappingURL=authenticate.js.map

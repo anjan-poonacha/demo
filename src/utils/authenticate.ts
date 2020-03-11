@@ -65,3 +65,41 @@ export const protect = catchAsync(async (req: IUserRequest, res, next) => {
   });
   // next();
 });
+
+export const protectUserAccount = catchAsync(
+  async (req: IUserRequest, res, next) => {
+    let token: string;
+    const { headers } = req;
+
+    if (headers.authorization && headers.authorization.startsWith('Bearer')) {
+      token = headers.authorization.split(' ')[1];
+    }
+
+    // 2. Verification token
+    const decoded = await promisify(jwt.verify)(
+      token!,
+      (process.env as { JWT_SECRET: string }).JWT_SECRET
+    );
+    // console.log(decoded);
+
+    // 3. Check if user still exists
+
+    let currentUser;
+    if ((decoded as { role: string }).role === 'superadmin') {
+      currentUser = await SuperAdmin.findById((decoded as { id: string }).id);
+    } else {
+      currentUser = await UserAccount.findById((decoded as { id: string }).id);
+    }
+
+    if (!currentUser) {
+      return next(
+        new AppError("The User belonging to this token doesn't exists", 401)
+      );
+    }
+
+    // GRANT ACCESS TO PROTECTED ROUTE
+    req.user = currentUser;
+
+    next();
+  }
+);

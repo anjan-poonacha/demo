@@ -67,20 +67,26 @@ export const login = catchAsync(async (req, res, next) => {
 
 export const createUserAccount = catchAsync(
   async (req: IUserRequest, res, next) => {
-    const reqBody: {
-      approvedBy: Schema.Types.ObjectId;
-      password: string;
-    } = { ...req.body };
-    reqBody.approvedBy = req.user._id;
-    reqBody.password = 'CRVS2020';
+    console.log(req.user);
+    const { application } = req.body;
+    application.approvedBy = req.user._id;
+    application.password = 'CRVS2020';
 
-    const userAccount = await UserAccount.create(reqBody);
+    // console.log(req.body);
+    // const reqBody: {
+    //   approvedBy: Schema.Types.ObjectId;
+    //   password: string;
+    // } = { ...req.body };
+    // reqBody.approvedBy = req.user._id;
+    // reqBody.password = 'CRVS2020';
+
+    // console.log(application);
+
+    const userAccount = await UserAccount.create(application);
 
     res.status(201).json({
       status: 'SUCCESS',
-      data: {
-        user: userAccount
-      }
+      userAccount
     });
   }
 );

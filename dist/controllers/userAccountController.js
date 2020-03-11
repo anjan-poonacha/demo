@@ -33,15 +33,14 @@ exports.login = catchAsync_1.default(async (req, res, next) => {
     createSendToken(user, 200, res);
 });
 exports.createUserAccount = catchAsync_1.default(async (req, res, next) => {
-    const reqBody = { ...req.body };
-    reqBody.approvedBy = req.user._id;
-    reqBody.password = 'CRVS2020';
-    const userAccount = await userAccountModel_1.default.create(reqBody);
+    console.log(req.user);
+    const { application } = req.body;
+    application.approvedBy = req.user._id;
+    application.password = 'CRVS2020';
+    const userAccount = await userAccountModel_1.default.create(application);
     res.status(201).json({
         status: 'SUCCESS',
-        data: {
-            user: userAccount
-        }
+        userAccount
     });
 });
 exports.getUserAccount = catchAsync_1.default(async (req, res, next) => {
