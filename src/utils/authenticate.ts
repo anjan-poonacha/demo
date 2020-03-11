@@ -4,8 +4,8 @@ import * as jwt from 'jsonwebtoken';
 
 import AppError from './appError';
 import catchAsync from './catchAsync';
-import SuperAdmin, { ISuperAdmin } from '../models/superAdminModel';
-import UserAccount, { IUserAccount } from '../models/userAccountModel';
+import SuperAdmin from '../models/superAdminModel';
+import UserAccount from '../models/userAccountModel';
 
 export const restrictTo = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -29,20 +29,16 @@ export interface IUserRequest extends Request {
 }
 
 export const protect = catchAsync(async (req: IUserRequest, res, next) => {
-  let token;
+  let token: string;
   const { headers } = req;
 
   if (headers.authorization && headers.authorization.startsWith('Bearer')) {
     token = headers.authorization.split(' ')[1];
   }
 
-  if (!token) {
-    return next(new AppError('Token not found', 401));
-  }
-
   // 2. Verification token
   const decoded = await promisify(jwt.verify)(
-    token,
+    token!,
     (process.env as { JWT_SECRET: string }).JWT_SECRET
   );
   // console.log(decoded);

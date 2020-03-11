@@ -30,9 +30,6 @@ exports.protect = catchAsync_1.default(async (req, res, next) => {
     if (headers.authorization && headers.authorization.startsWith('Bearer')) {
         token = headers.authorization.split(' ')[1];
     }
-    if (!token) {
-        return next(new appError_1.default('Token not found', 401));
-    }
     const decoded = await util_1.promisify(jwt.verify)(token, process.env.JWT_SECRET);
     let currentUser;
     if (decoded.role === 'superadmin') {
@@ -49,3 +46,4 @@ exports.protect = catchAsync_1.default(async (req, res, next) => {
         user: currentUser
     });
 });
+//# sourceMappingURL=authenticate.js.map

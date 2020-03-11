@@ -24,3 +24,4 @@ app.all('*', (req, res, next) => {
 });
 app.use(errorController_1.default);
 exports.default = app;
+//# sourceMappingURL=app.js.map

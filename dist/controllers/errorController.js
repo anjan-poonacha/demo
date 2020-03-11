@@ -66,3 +66,4 @@ const errorHandler = (err, req, res, next) => {
     }
 };
 exports.default = errorHandler;
+//# sourceMappingURL=errorController.js.map

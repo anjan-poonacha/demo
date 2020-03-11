@@ -16,3 +16,4 @@ const router = express_1.default.Router();
 router.post('/signin', superAdminController.login);
 router.post('/signup', superAdminController.signup);
 exports.default = router;
+//# sourceMappingURL=superAdminRouter.js.map

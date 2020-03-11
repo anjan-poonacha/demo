@@ -44,3 +44,4 @@ exports.login = catchAsync_1.default(async (req, res, next) => {
     }
     createSendToken(user, 200, res);
 });
+//# sourceMappingURL=superAdminController.js.map

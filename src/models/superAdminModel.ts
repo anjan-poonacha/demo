@@ -7,7 +7,7 @@ export interface ISuperAdmin extends Document {
   role: string;
   password: string | undefined;
   passwordConfirm: string | undefined;
-  correctPassword: any;
+  correctPassword: Function;
 }
 
 const superAdminSchema = new mongoose.Schema<ISuperAdmin>({

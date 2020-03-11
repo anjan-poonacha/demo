@@ -5,3 +5,4 @@ exports.default = (fn) => {
         fn(req, res, next).catch(next);
     };
 };
+//# sourceMappingURL=catchAsync.js.map

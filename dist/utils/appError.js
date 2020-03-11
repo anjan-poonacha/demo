@@ -10,3 +10,4 @@ class AppError extends Error {
     }
 }
 exports.default = AppError;
+//# sourceMappingURL=appError.js.map
