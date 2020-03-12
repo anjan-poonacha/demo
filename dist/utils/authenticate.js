@@ -43,6 +43,7 @@ exports.protect = catchAsync_1.default(async (req, res, next) => {
     }
     req.user = currentUser;
     res.status(200).json({
+        status: 'SUCCESS',
         user: currentUser
     });
 });

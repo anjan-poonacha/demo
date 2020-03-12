@@ -61,6 +61,7 @@ export const protect = catchAsync(async (req: IUserRequest, res, next) => {
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
   res.status(200).json({
+    status: 'SUCCESS',
     user: currentUser
   });
   // next();

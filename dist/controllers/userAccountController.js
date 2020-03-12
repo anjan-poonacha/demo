@@ -33,7 +33,6 @@ exports.login = catchAsync_1.default(async (req, res, next) => {
     createSendToken(user, 200, res);
 });
 exports.createUserAccount = catchAsync_1.default(async (req, res, next) => {
-    console.log(req.user);
     const { application } = req.body;
     application.approvedBy = req.user._id;
     application.password = 'CRVS2020';

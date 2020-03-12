@@ -67,7 +67,6 @@ export const login = catchAsync(async (req, res, next) => {
 
 export const createUserAccount = catchAsync(
   async (req: IUserRequest, res, next) => {
-    console.log(req.user);
     const { application } = req.body;
     application.approvedBy = req.user._id;
     application.password = 'CRVS2020';

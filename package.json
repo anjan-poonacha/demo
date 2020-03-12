@@ -2,7 +2,7 @@
   "name": "crvs_auth",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "./dist/server.js",
   "scripts": {
     "test": "nodemon ./dist/server.js",
     "start": "node ./dist/server.js"
