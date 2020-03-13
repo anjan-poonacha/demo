@@ -16,7 +16,7 @@ mongoose
     useCreateIndex: true,
     useFindAndModify: false,
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   })
   .then(con => console.log('DB connection established'));
 

@@ -13,26 +13,26 @@ export interface ISuperAdmin extends Document {
 const superAdminSchema = new mongoose.Schema<ISuperAdmin>({
   firstName: {
     type: String,
-    required: [true, 'Give a First Name']
+    required: [true, 'Give a First Name'],
   },
 
   lastName: {
     type: String,
-    required: [true, 'Give a Last Name']
+    required: [true, 'Give a Last Name'],
   },
   email: {
     type: String,
     required: [true, 'Provide your email address'],
     unique: true,
     lowercase: true,
-    validate: [validator.isEmail, 'Provide a valid email']
+    validate: [validator.isEmail, 'Provide a valid email'],
   },
 
   password: {
     type: String,
     required: [true, 'Provide a password'],
     minlength: 8,
-    select: false
+    select: false,
   },
   passwordConfirm: {
     type: String,
@@ -41,8 +41,8 @@ const superAdminSchema = new mongoose.Schema<ISuperAdmin>({
       validator: function(el: string): boolean {
         return el === (this as { password: string }).password;
       },
-      message: `Passwords are not the same`
-    }
+      message: `Passwords are not the same`,
+    },
   },
   phone: {
     type: String,
@@ -51,13 +51,13 @@ const superAdminSchema = new mongoose.Schema<ISuperAdmin>({
       validator: function(el: string) {
         return validator.isMobilePhone(el, 'en-RW');
       },
-      message: 'Enter a valid phone number'
-    }
+      message: 'Enter a valid phone number',
+    },
   },
   role: {
     type: String,
-    default: 'superadmin'
-  }
+    default: 'superadmin',
+  },
 });
 
 superAdminSchema.pre<ISuperAdmin>('save', async function(next) {
@@ -69,7 +69,7 @@ superAdminSchema.pre<ISuperAdmin>('save', async function(next) {
 
 superAdminSchema.methods.correctPassword = async function(
   candidatePassword: string,
-  userPassword: string
+  userPassword: string,
 ) {
   // userPassword -> password in the DB,
   //  candidatePassword -> to be verified
@@ -78,7 +78,7 @@ superAdminSchema.methods.correctPassword = async function(
 
 const SuperAdmin: Model<ISuperAdmin> = mongoose.model<ISuperAdmin>(
   'SuperAdmin',
-  superAdminSchema
+  superAdminSchema,
 );
 
 export default SuperAdmin;

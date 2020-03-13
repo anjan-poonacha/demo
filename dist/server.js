@@ -17,7 +17,7 @@ mongoose_1.default
     useCreateIndex: true,
     useFindAndModify: false,
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
 })
     .then(con => console.log('DB connection established'));
 const app_1 = __importDefault(require("./app"));

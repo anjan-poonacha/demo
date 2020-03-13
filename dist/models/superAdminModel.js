@@ -9,24 +9,24 @@ const validator_1 = __importDefault(require("validator"));
 const superAdminSchema = new mongoose_1.default.Schema({
     firstName: {
         type: String,
-        required: [true, 'Give a First Name']
+        required: [true, 'Give a First Name'],
     },
     lastName: {
         type: String,
-        required: [true, 'Give a Last Name']
+        required: [true, 'Give a Last Name'],
     },
     email: {
         type: String,
         required: [true, 'Provide your email address'],
         unique: true,
         lowercase: true,
-        validate: [validator_1.default.isEmail, 'Provide a valid email']
+        validate: [validator_1.default.isEmail, 'Provide a valid email'],
     },
     password: {
         type: String,
         required: [true, 'Provide a password'],
         minlength: 8,
-        select: false
+        select: false,
     },
     passwordConfirm: {
         type: String,
@@ -35,8 +35,8 @@ const superAdminSchema = new mongoose_1.default.Schema({
             validator: function (el) {
                 return el === this.password;
             },
-            message: `Passwords are not the same`
-        }
+            message: `Passwords are not the same`,
+        },
     },
     phone: {
         type: String,
@@ -44,13 +44,13 @@ const superAdminSchema = new mongoose_1.default.Schema({
             validator: function (el) {
                 return validator_1.default.isMobilePhone(el, 'en-RW');
             },
-            message: 'Enter a valid phone number'
-        }
+            message: 'Enter a valid phone number',
+        },
     },
     role: {
         type: String,
-        default: 'superadmin'
-    }
+        default: 'superadmin',
+    },
 });
 superAdminSchema.pre('save', async function (next) {
     if (!this.isModified('password'))

@@ -10,113 +10,113 @@ const addressSchema = new mongoose_1.default.Schema({
     village: String,
     cell: String,
     sector: String,
-    district: String
+    district: String,
 });
 const residentialAddressSchema = new mongoose_1.default.Schema({
     rwanda: {
         type: addressSchema,
-        required: true
+        required: true,
     },
     abroad: {
         type: String,
-        default: null
-    }
+        default: null,
+    },
 });
 const userAccountSchema = new mongoose_1.default.Schema({
     status: {
         type: String,
         enum: ['approved', 'unapproved', 'rejected'],
-        default: 'approved'
+        default: 'approved',
     },
     email: {
         type: String,
         unique: true,
         lowercase: true,
-        validate: [validator_1.default.isEmail, 'Provide a valid email']
+        validate: [validator_1.default.isEmail, 'Provide a valid email'],
     },
     IDType: {
-        type: String
+        type: String,
     },
     IDNumber: {
-        type: String
+        type: String,
     },
     role: {
         type: String,
         required: [true, 'Specify the role applying for.'],
-        enum: ['ministryAdmin', 'notifier', 'cr', 'cro']
+        enum: ['ministryAdmin', 'notifier', 'cr', 'cro'],
     },
     occupiedPositon: {
-        type: String
+        type: String,
     },
     facilityName: {
-        type: String
+        type: String,
     },
     facilityType: {
         type: String,
         enum: {
             values: ['community', 'healthFacility', 'embassy', 'ministry'],
-            message: 'Facility type be ( community | healthFacility | embassy | ministry )'
-        }
+            message: 'Facility type be ( community | healthFacility | embassy | ministry )',
+        },
     },
     facilityArea: {
         type: String,
         enum: {
             values: ['cell', 'sector', 'district'],
-            message: 'Facility type be ( cell | sector | district )'
-        }
+            message: 'Facility type be ( cell | sector | district )',
+        },
     },
     photo: {
-        type: String
+        type: String,
     },
     telephone: {
-        type: String
+        type: String,
     },
     surname: {
-        type: String
+        type: String,
     },
     postNames: {
-        type: String
+        type: String,
     },
     nationality: {
-        type: String
+        type: String,
     },
     dob: {
-        type: Date
+        type: Date,
     },
     sex: {
         type: String,
-        enum: ['male', 'female', 'others']
+        enum: ['male', 'female', 'others'],
     },
     martitialStatus: {
         type: String,
-        enum: ['married', 'single', 'others']
+        enum: ['married', 'single', 'others'],
     },
     vitialStatus: {
         type: String,
         enum: {
             values: ['alive', 'incapacitated'],
-            message: 'vitialStatus should be either "alive" or "incapacitated"'
-        }
+            message: 'vitialStatus should be either "alive" or "incapacitated"',
+        },
     },
     domicileAddress: {
         type: addressSchema,
         default: this
-            .residentialAddress
+            .residentialAddress,
     },
     residentialAddress: {
         type: residentialAddressSchema,
-        required: [true, 'Provide the Residential Address']
+        required: [true, 'Provide the Residential Address'],
     },
     isConditionsAgreed: {
-        type: Boolean
+        type: Boolean,
     },
     ministry: {
         type: String,
         required: [true, 'Specify the ministry'],
         enum: {
             values: ['MOH', 'MINALOC', 'MINAFFET'],
-            message: 'Role can be either "MOH / MINALOC / MINAFFET"'
-        }
+            message: 'Role can be either "MOH / MINALOC / MINAFFET"',
+        },
     },
     phone: {
         type: String,
@@ -124,26 +124,26 @@ const userAccountSchema = new mongoose_1.default.Schema({
             validator: function (el) {
                 return validator_1.default.isMobilePhone(el, 'en-RW');
             },
-            message: 'Enter a valid phone number'
-        }
+            message: 'Enter a valid phone number',
+        },
     },
     firstName: {
-        type: String
+        type: String,
     },
     lastName: {
-        type: String
+        type: String,
     },
     approvedOn: {
         type: Date,
-        default: Date.now
+        default: Date.now,
     },
     approvedBy: {
-        type: mongoose_1.default.Schema.Types.ObjectId
+        type: mongoose_1.default.Schema.Types.ObjectId,
     },
     password: {
         type: String,
-        select: false
-    }
+        select: false,
+    },
 });
 userAccountSchema.pre('save', function (next) {
     if (this.facilityType === 'community' ||

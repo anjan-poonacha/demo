@@ -14,21 +14,21 @@ const signToken = (
   ministry: string,
   firstName: string,
   facilityType: string,
-  facilityArea: string
+  facilityArea: string,
 ) => {
   return jwt.sign(
     { id, role, ministry, firstName, facilityArea, facilityType },
     (process.env as { JWT_SECRET: string }).JWT_SECRET,
     {
-      expiresIn: process.env.JWT_EXPIRES_IN
-    }
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    },
   );
 };
 
 const createSendToken = (
   user: IUserAccount,
   statusCode: number,
-  res: Response
+  res: Response,
 ) => {
   const token = signToken(
     user._id,
@@ -36,14 +36,14 @@ const createSendToken = (
     user.ministry,
     user.firstName,
     user.facilityType,
-    user.facilityArea
+    user.facilityArea,
   );
 
   // REMOVE THE PASSWORD FROM THE OUTPUT
   user.password = undefined;
   res.status(statusCode).json({
     status: 'SUCCESS',
-    token
+    token,
   });
 };
 
@@ -85,9 +85,9 @@ export const createUserAccount = catchAsync(
 
     res.status(201).json({
       status: 'SUCCESS',
-      userAccount
+      userAccount,
     });
-  }
+  },
 );
 
 export const getUserAccount = catchAsync(async (req, res, next) => {
@@ -99,13 +99,13 @@ export const getUserAccount = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'SUCCESS',
-    exist
+    exist,
   });
 });
 
 export const statusCheck: RequestHandler = (req, res, next) => {
   res.status(200).json({
-    status: 'ACTIVE'
+    status: 'ACTIVE',
   });
 };
 
@@ -117,7 +117,7 @@ export const getCitizen: RequestHandler = async (req, res, next) => {
     const { nid } = req.query as { nid: string };
     if (!nid) {
       throw new Error(
-        'No NID found in the request. Please pass a valid NID in the url params!'
+        'No NID found in the request. Please pass a valid NID in the url params!',
       );
     }
     axios
@@ -126,15 +126,15 @@ export const getCitizen: RequestHandler = async (req, res, next) => {
         {
           documentNumber: nid,
           keyPhrase:
-            'A-ABJ0yPnq8vyiH!m-yPTV-ELHi?kx31FmDcnvwMzP$19LK@4@$@2!$W-@6bSBE5Ch5nVEX6U2peZpL-_niqA8-LpXdsEv!_kgy2VwqApgs-W7?1A7cEspFKiv?_BFBy'
+            'A-ABJ0yPnq8vyiH!m-yPTV-ELHi?kx31FmDcnvwMzP$19LK@4@$@2!$W-@6bSBE5Ch5nVEX6U2peZpL-_niqA8-LpXdsEv!_kgy2VwqApgs-W7?1A7cEspFKiv?_BFBy',
         },
         {
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: `Bearer ${TOKEN}`
-          }
-        }
+            Authorization: `Bearer ${TOKEN}`,
+          },
+        },
       )
       .then((result: { data: any }) => {
         console.log({ data: result.data });

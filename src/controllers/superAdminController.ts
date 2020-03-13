@@ -11,15 +11,15 @@ const signToken = (id: string, role: string) => {
     { id, role },
     (process.env as { JWT_SECRET: string }).JWT_SECRET,
     {
-      expiresIn: process.env.JWT_EXPIRES_IN
-    }
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    },
   );
 };
 
 const createSendToken = (
   user: ISuperAdmin | IUserAccount,
   statusCode: number,
-  res: Response
+  res: Response,
 ) => {
   const token = signToken(user._id, user.role);
 
@@ -28,7 +28,7 @@ const createSendToken = (
   res.status(statusCode).json({
     status: 'SUCCESS',
     token,
-    data: { user }
+    data: { user },
   });
 };
 
@@ -39,7 +39,7 @@ export const signup = catchAsync(async (req, res, next) => {
     email,
     password,
     passwordConfirm,
-    phone
+    phone,
   } = req.body;
 
   const newUser = await SuperAdmin.create({
@@ -48,7 +48,7 @@ export const signup = catchAsync(async (req, res, next) => {
     email,
     password,
     passwordConfirm,
-    phone
+    phone,
   });
 
   createSendToken(newUser, 201, res);

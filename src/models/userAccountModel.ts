@@ -19,52 +19,52 @@ const addressSchema = new mongoose.Schema<IUserAccount>({
   village: String,
   cell: String,
   sector: String,
-  district: String
+  district: String,
 });
 
 const residentialAddressSchema = new mongoose.Schema({
   rwanda: {
     type: addressSchema,
-    required: true
+    required: true,
   },
   abroad: {
     type: String,
-    default: null
-  }
+    default: null,
+  },
 });
 
 const userAccountSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['approved', 'unapproved', 'rejected'],
-    default: 'approved'
+    default: 'approved',
   },
   email: {
     type: String,
     // required: [true, 'Provide your email address'],
     unique: true,
     lowercase: true,
-    validate: [validator.isEmail, 'Provide a valid email']
+    validate: [validator.isEmail, 'Provide a valid email'],
   },
   IDType: {
-    type: String
+    type: String,
     // required: [true, 'Provide the ID type']
   },
   IDNumber: {
-    type: String
+    type: String,
     // required: [true, 'Provide the ID number']
   },
   role: {
     type: String,
     required: [true, 'Specify the role applying for.'],
-    enum: ['ministryAdmin', 'notifier', 'cr', 'cro']
+    enum: ['ministryAdmin', 'notifier', 'cr', 'cro'],
   },
   occupiedPositon: {
-    type: String
+    type: String,
     // required: [true, 'Provide a occupied position']
   },
   facilityName: {
-    type: String
+    type: String,
     // required: [true, 'Provide a facilityName']
   },
   facilityType: {
@@ -72,37 +72,37 @@ const userAccountSchema = new mongoose.Schema({
     enum: {
       values: ['community', 'healthFacility', 'embassy', 'ministry'],
       message:
-        'Facility type be ( community | healthFacility | embassy | ministry )'
-    }
+        'Facility type be ( community | healthFacility | embassy | ministry )',
+    },
   },
   facilityArea: {
     type: String,
     enum: {
       values: ['cell', 'sector', 'district'],
-      message: 'Facility type be ( cell | sector | district )'
-    }
+      message: 'Facility type be ( cell | sector | district )',
+    },
   },
   photo: {
-    type: String
+    type: String,
     // required: [true, 'Provide a profile']
   },
   telephone: {
-    type: String
+    type: String,
     // required: [true, 'Provide a telephone number']
   },
   surname: {
-    type: String
+    type: String,
     // required: [true, 'Provide a Surname']
   },
   postNames: {
-    type: String
+    type: String,
   },
   nationality: {
-    type: String
+    type: String,
     // required: [true, 'Provide the nationality']
   },
   dob: {
-    type: Date
+    type: Date,
     // required: [true, 'Give DOB in yyyy-mm-dd format']
   },
 
@@ -110,13 +110,13 @@ const userAccountSchema = new mongoose.Schema({
     type: String,
     // required: [true, 'Specify the gender / sex'],
     // edit
-    enum: ['male', 'female', 'others']
+    enum: ['male', 'female', 'others'],
   },
   martitialStatus: {
     type: String,
     // required: [true, 'Specify the martial status'],
     // Edit
-    enum: ['married', 'single', 'others']
+    enum: ['married', 'single', 'others'],
   },
   vitialStatus: {
     type: String,
@@ -124,22 +124,22 @@ const userAccountSchema = new mongoose.Schema({
     // Edit
     enum: {
       values: ['alive', 'incapacitated'],
-      message: 'vitialStatus should be either "alive" or "incapacitated"'
-    }
+      message: 'vitialStatus should be either "alive" or "incapacitated"',
+    },
   },
   domicileAddress: {
     type: addressSchema,
     default: ((this as unknown) as { residentialAddress: mongoose.Schema<any> })
-      .residentialAddress
+      .residentialAddress,
   },
   residentialAddress: {
     type: residentialAddressSchema,
-    required: [true, 'Provide the Residential Address']
+    required: [true, 'Provide the Residential Address'],
   },
   // profession: { type: String, required: true },
   // occupation: { type: String, required: true },
   isConditionsAgreed: {
-    type: Boolean
+    type: Boolean,
     // required: [true, 'Agree with all the conditions']
   },
   ministry: {
@@ -147,8 +147,8 @@ const userAccountSchema = new mongoose.Schema({
     required: [true, 'Specify the ministry'],
     enum: {
       values: ['MOH', 'MINALOC', 'MINAFFET'],
-      message: 'Role can be either "MOH / MINALOC / MINAFFET"'
-    }
+      message: 'Role can be either "MOH / MINALOC / MINAFFET"',
+    },
   },
   phone: {
     type: String,
@@ -157,30 +157,30 @@ const userAccountSchema = new mongoose.Schema({
       validator: function(el: string) {
         return validator.isMobilePhone(el, 'en-RW');
       },
-      message: 'Enter a valid phone number'
-    }
+      message: 'Enter a valid phone number',
+    },
   },
   firstName: {
-    type: String
+    type: String,
     // required: [true, 'Please give a name']
   },
   lastName: {
-    type: String
+    type: String,
     // required: [true, 'Please give a name']
   },
   approvedOn: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   approvedBy: {
-    type: mongoose.Schema.Types.ObjectId
+    type: mongoose.Schema.Types.ObjectId,
     // required: true
   },
   password: {
     type: String,
-    select: false
+    select: false,
     // required:true
-  }
+  },
 });
 
 userAccountSchema.pre<IUserAccount>('save', function(next) {
@@ -208,7 +208,7 @@ userAccountSchema.pre<IUserAccount>('save', async function(next) {
 
 userAccountSchema.methods.correctPassword = async function(
   candidatePassword: string,
-  userPassword: string
+  userPassword: string,
 ) {
   // userPassword -> password in the DB,
   //  candidatePassword -> to be verified
@@ -217,7 +217,7 @@ userAccountSchema.methods.correctPassword = async function(
 
 const UserAccount: Model<IUserAccount> = mongoose.model<IUserAccount>(
   'UserAccount',
-  userAccountSchema
+  userAccountSchema,
 );
 
 export default UserAccount;

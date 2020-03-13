@@ -10,7 +10,7 @@ const appError_1 = __importDefault(require("../utils/appError"));
 const userAccountModel_1 = __importDefault(require("../models/userAccountModel"));
 const signToken = (id, role, ministry, firstName, facilityType, facilityArea) => {
     return jsonwebtoken_1.default.sign({ id, role, ministry, firstName, facilityArea, facilityType }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN
+        expiresIn: process.env.JWT_EXPIRES_IN,
     });
 };
 const createSendToken = (user, statusCode, res) => {
@@ -18,7 +18,7 @@ const createSendToken = (user, statusCode, res) => {
     user.password = undefined;
     res.status(statusCode).json({
         status: 'SUCCESS',
-        token
+        token,
     });
 };
 exports.login = catchAsync_1.default(async (req, res, next) => {
@@ -39,7 +39,7 @@ exports.createUserAccount = catchAsync_1.default(async (req, res, next) => {
     const userAccount = await userAccountModel_1.default.create(application);
     res.status(201).json({
         status: 'SUCCESS',
-        userAccount
+        userAccount,
     });
 });
 exports.getUserAccount = catchAsync_1.default(async (req, res, next) => {
@@ -48,12 +48,12 @@ exports.getUserAccount = catchAsync_1.default(async (req, res, next) => {
     const exist = user ? true : false;
     res.status(200).json({
         status: 'SUCCESS',
-        exist
+        exist,
     });
 });
 exports.statusCheck = (req, res, next) => {
     res.status(200).json({
-        status: 'ACTIVE'
+        status: 'ACTIVE',
     });
 };
 const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFYnBJZCI6IjI4IiwiRWJwTmFtZSI6IkNSVlNfUVQiLCJPdGsiOiJtU0tSQWxDTVNIakNkVEdZeHNQVWhLY213UWlXMldhdUJPZjArM052aDhDditUSVZSYjUxdUdSVTFDbHdOZTVYYldJTmhWcFhnU1N3WWlxT3h3ZXQzUT09IiwianRpIjoiMjhhZTZjYzMtNGVjMC00OGJlLTlkMmEtYjEzZDQ1NzgyNmFlIiwibmJmIjoxNTgyNzgxMTQwLCJleHAiOjE1ODI3OTU1NDAsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDI4Ni8iLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjQyODYvIn0.IgDl3Wml2Z5rJ10Oxm3GWYEt8DYkmR0v7uKYnZ72ryY';
@@ -66,13 +66,13 @@ exports.getCitizen = async (req, res, next) => {
         axios_1.default
             .post('https://uat.nida.gov.rw:8081/onlineauthentication/getcitizen', {
             documentNumber: nid,
-            keyPhrase: 'A-ABJ0yPnq8vyiH!m-yPTV-ELHi?kx31FmDcnvwMzP$19LK@4@$@2!$W-@6bSBE5Ch5nVEX6U2peZpL-_niqA8-LpXdsEv!_kgy2VwqApgs-W7?1A7cEspFKiv?_BFBy'
+            keyPhrase: 'A-ABJ0yPnq8vyiH!m-yPTV-ELHi?kx31FmDcnvwMzP$19LK@4@$@2!$W-@6bSBE5Ch5nVEX6U2peZpL-_niqA8-LpXdsEv!_kgy2VwqApgs-W7?1A7cEspFKiv?_BFBy',
         }, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
-                Authorization: `Bearer ${TOKEN}`
-            }
+                Authorization: `Bearer ${TOKEN}`,
+            },
         })
             .then((result) => {
             console.log({ data: result.data });

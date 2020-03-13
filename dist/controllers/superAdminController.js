@@ -9,7 +9,7 @@ const superAdminModel_1 = __importDefault(require("../models/superAdminModel"));
 const appError_1 = __importDefault(require("../utils/appError"));
 const signToken = (id, role) => {
     return jsonwebtoken_1.default.sign({ id, role }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN
+        expiresIn: process.env.JWT_EXPIRES_IN,
     });
 };
 const createSendToken = (user, statusCode, res) => {
@@ -18,18 +18,18 @@ const createSendToken = (user, statusCode, res) => {
     res.status(statusCode).json({
         status: 'SUCCESS',
         token,
-        data: { user }
+        data: { user },
     });
 };
 exports.signup = catchAsync_1.default(async (req, res, next) => {
-    const { firstName, lastName, email, password, passwordConfirm, phone } = req.body;
+    const { firstName, lastName, email, password, passwordConfirm, phone, } = req.body;
     const newUser = await superAdminModel_1.default.create({
         firstName,
         lastName,
         email,
         password,
         passwordConfirm,
-        phone
+        phone,
     });
     createSendToken(newUser, 201, res);
 });
