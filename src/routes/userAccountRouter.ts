@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/statusCheck', userController.statusCheck);
 
-router.get('/protect', authController.protect);
+router.get('/protect', authController.protectResponse);
 router.post('/login', userController.login);
 
 router.post(

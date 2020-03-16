@@ -38,6 +38,7 @@ exports.createUserAccount = catchAsync_1.default(async (req, res, next) => {
     const { application } = req.body;
     application.approvedBy = req.user._id;
     application.password = 'CRVS2020';
+    application.approvedAt = Date.now();
     const userAccount = await userAccountModel_1.default.create(application);
     res.status(201).json({
         status: 'SUCCESS',

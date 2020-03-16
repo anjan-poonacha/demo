@@ -73,6 +73,7 @@ export const createUserAccount = catchAsync(async (req: Request, res, next) => {
   const { application } = req.body;
   application.approvedBy = req.user._id;
   application.password = 'CRVS2020';
+  application.approvedAt = Date.now();
 
   // console.log(req.body);
   // const reqBody: {

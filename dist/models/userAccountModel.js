@@ -64,6 +64,7 @@ const userAccountSchema = new mongoose_1.default.Schema({
             values: ['cell', 'sector', 'district'],
             message: 'Facility type be ( cell | sector | district )',
         },
+        required: [true, 'Provide the facilityArea'],
     },
     photo: {
         type: String,
