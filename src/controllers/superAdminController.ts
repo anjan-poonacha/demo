@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 
 import catchAsync from '../utils/catchAsync';
 import SuperAdmin, { ISuperAdmin } from '../models/superAdminModel';
@@ -32,7 +32,27 @@ const createSendToken = (
   });
 };
 
-export const signup = catchAsync(async (req, res, next) => {
+export const createSuperAdmin = catchAsync(async (req: Request, res, next) => {
+  if (!req.user) {
+    return next(new AppError('Something went wrong, Not Authorized', 400));
+  }
+
+  const reqBody = { ...req.body };
+  reqBody.createdBy = req.user._id;
+  reqBody.createdAt = Date.now();
+  console.log(req);
+
+  const newUser = await SuperAdmin.create(reqBody);
+
+  res.status(201).json({
+    status: 'SUCCESS',
+    data: {
+      user: newUser,
+    },
+  });
+});
+
+export const signup = catchAsync(async (req, res, _) => {
   const {
     firstName,
     lastName,
@@ -64,7 +84,7 @@ export const login = catchAsync(async (req, res, next) => {
   // 2) Check if user exists && password is correct
   const user = await SuperAdmin.findOne({ email }).select('+password');
 
-  if (!user || !(await user.correctPassword(password, user.password))) {
+  if (!user || !(await user.correctPassword(password, user.password!))) {
     return next(new AppError('Incorrect username or password', 401));
   }
 

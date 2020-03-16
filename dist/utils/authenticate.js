@@ -18,13 +18,13 @@ const superAdminModel_1 = __importDefault(require("../models/superAdminModel"));
 const userAccountModel_1 = __importDefault(require("../models/userAccountModel"));
 exports.restrictTo = (...roles) => {
     return (req, res, next) => {
-        if (!roles.includes(req.user.role)) {
+        if (!req.user || !roles.includes(req.user.role)) {
             return next(new appError_1.default('You dont have permission to perform this action', 403));
         }
         next();
     };
 };
-exports.protect = catchAsync_1.default(async (req, res, next) => {
+exports.protectResponse = catchAsync_1.default(async (req, res, next) => {
     let token;
     const { headers } = req;
     if (headers.authorization && headers.authorization.startsWith('Bearer')) {
@@ -44,10 +44,10 @@ exports.protect = catchAsync_1.default(async (req, res, next) => {
     req.user = currentUser;
     res.status(200).json({
         status: 'SUCCESS',
-        user: currentUser
+        user: currentUser,
     });
 });
-exports.protectUserAccount = catchAsync_1.default(async (req, res, next) => {
+exports.protect = catchAsync_1.default(async (req, res, next) => {
     let token;
     const { headers } = req;
     if (headers.authorization && headers.authorization.startsWith('Bearer')) {

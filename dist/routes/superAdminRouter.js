@@ -12,8 +12,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const superAdminController = __importStar(require("../controllers/superAdminController"));
+const authenticate = __importStar(require("../utils/authenticate"));
 const router = express_1.default.Router();
 router.post('/signin', superAdminController.login);
-router.post('/signup', superAdminController.signup);
+console.log('Admin router');
+router.post('/newaccount', authenticate.protect, authenticate.restrictTo('superadmin'), superAdminController.createSuperAdmin);
 exports.default = router;
 //# sourceMappingURL=superAdminRouter.js.map

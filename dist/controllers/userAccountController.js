@@ -33,6 +33,8 @@ exports.login = catchAsync_1.default(async (req, res, next) => {
     createSendToken(user, 200, res);
 });
 exports.createUserAccount = catchAsync_1.default(async (req, res, next) => {
+    if (!req.user)
+        return next(new appError_1.default("Something went wrong, Couldn't find `req.user`", 400));
     const { application } = req.body;
     application.approvedBy = req.user._id;
     application.password = 'CRVS2020';

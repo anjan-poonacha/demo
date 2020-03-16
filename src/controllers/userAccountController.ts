@@ -4,8 +4,8 @@ import axios, { AxiosError } from 'axios';
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
 import UserAccount, { IUserAccount } from '../models/userAccountModel';
-import { RequestHandler, Response } from 'express';
-import { IUserRequest } from '../utils/authenticate';
+import { RequestHandler, Response, Request } from 'express';
+// import { IUserRequest } from '../utils/authenticate';
 import { Schema } from 'mongoose';
 
 const signToken = (
@@ -65,30 +65,32 @@ export const login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
-export const createUserAccount = catchAsync(
-  async (req: IUserRequest, res, next) => {
-    const { application } = req.body;
-    application.approvedBy = req.user._id;
-    application.password = 'CRVS2020';
+export const createUserAccount = catchAsync(async (req: Request, res, next) => {
+  if (!req.user)
+    return next(
+      new AppError("Something went wrong, Couldn't find `req.user`", 400),
+    );
+  const { application } = req.body;
+  application.approvedBy = req.user._id;
+  application.password = 'CRVS2020';
 
-    // console.log(req.body);
-    // const reqBody: {
-    //   approvedBy: Schema.Types.ObjectId;
-    //   password: string;
-    // } = { ...req.body };
-    // reqBody.approvedBy = req.user._id;
-    // reqBody.password = 'CRVS2020';
+  // console.log(req.body);
+  // const reqBody: {
+  //   approvedBy: Schema.Types.ObjectId;
+  //   password: string;
+  // } = { ...req.body };
+  // reqBody.approvedBy = req.user._id;
+  // reqBody.password = 'CRVS2020';
 
-    // console.log(application);
+  // console.log(application);
 
-    const userAccount = await UserAccount.create(application);
+  const userAccount = await UserAccount.create(application);
 
-    res.status(201).json({
-      status: 'SUCCESS',
-      userAccount,
-    });
-  },
-);
+  res.status(201).json({
+    status: 'SUCCESS',
+    userAccount,
+  });
+});
 
 export const getUserAccount = catchAsync(async (req, res, next) => {
   const { email } = req.params;

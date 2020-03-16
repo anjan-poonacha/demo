@@ -21,7 +21,23 @@ const createSendToken = (user, statusCode, res) => {
         data: { user },
     });
 };
-exports.signup = catchAsync_1.default(async (req, res, next) => {
+exports.createSuperAdmin = catchAsync_1.default(async (req, res, next) => {
+    if (!req.user) {
+        return next(new appError_1.default('Something went wrong, Not Authorized', 400));
+    }
+    const reqBody = { ...req.body };
+    reqBody.createdBy = req.user._id;
+    reqBody.createdAt = Date.now();
+    console.log(req);
+    const newUser = await superAdminModel_1.default.create(reqBody);
+    res.status(201).json({
+        status: 'SUCCESS',
+        data: {
+            user: newUser,
+        },
+    });
+});
+exports.signup = catchAsync_1.default(async (req, res, _) => {
     const { firstName, lastName, email, password, passwordConfirm, phone, } = req.body;
     const newUser = await superAdminModel_1.default.create({
         firstName,

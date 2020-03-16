@@ -17,7 +17,7 @@ const router = express_1.default.Router();
 router.get('/statusCheck', userController.statusCheck);
 router.get('/protect', authController.protect);
 router.post('/login', userController.login);
-router.post('/userAccount', authController.protectUserAccount, userController.createUserAccount);
+router.post('/userAccount', authController.protect, userController.createUserAccount);
 router.get('/nid/getCitizen', userController.getCitizen);
 router.get('/:email', userController.getUserAccount);
 exports.default = router;

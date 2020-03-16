@@ -1,13 +1,16 @@
 import bcrypt from 'bcryptjs';
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Model, Schema } from 'mongoose';
 import validator from 'validator';
 import { Document } from 'mongoose';
 
 export interface ISuperAdmin extends Document {
   role: string;
-  password: string | undefined;
-  passwordConfirm: string | undefined;
-  correctPassword: Function;
+  password: string;
+  passwordConfirm?: string;
+  correctPassword: (
+    inputPassword: string,
+    expectedPassword: string,
+  ) => Promise<boolean>;
 }
 
 const superAdminSchema = new mongoose.Schema<ISuperAdmin>({
@@ -58,6 +61,8 @@ const superAdminSchema = new mongoose.Schema<ISuperAdmin>({
     type: String,
     default: 'superadmin',
   },
+  createdBy: Schema.Types.ObjectId,
+  createdAt: Date,
 });
 
 superAdminSchema.pre<ISuperAdmin>('save', async function(next) {
