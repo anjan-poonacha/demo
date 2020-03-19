@@ -1,6 +1,7 @@
 FROM node:alpine
 WORKDIR '/app'
+RUN npm i typescript -g
 COPY ./package.json ./
 RUN npm install
 COPY . .
-CMD ["npm", "run", "test"]
+CMD ["npm", "run", "start:dev"]

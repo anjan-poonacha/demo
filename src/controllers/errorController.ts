@@ -6,6 +6,9 @@ interface SendError {
   (err: AppError, req: Request, res: Response): Response;
 }
 
+const handleInvalidAuthHeader = () =>
+  new AppError('Provide a proper value for authorization in the header', 400);
+
 const handleJWTError = () =>
   new AppError('Invalid Token. Please login again.', 401);
 
@@ -75,7 +78,8 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       error = handleValidationErrorDB(error);
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
-
+    if (error.code === 'ERR_HTTP_INVALID_HEADER_VALUE')
+      error = handleInvalidAuthHeader();
     sendErrorProd(error, req, res);
   }
 };

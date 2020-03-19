@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const appError_1 = __importDefault(require("../utils/appError"));
+const handleInvalidAuthHeader = () => new appError_1.default('Provide a proper value for authorization in the header', 400);
 const handleJWTError = () => new appError_1.default('Invalid Token. Please login again.', 401);
 const handleJWTExpiredError = () => new appError_1.default('Invalid Token. Please login again.', 401);
 const handleCastErrorDB = (err) => {
@@ -62,6 +63,8 @@ const errorHandler = (err, req, res, next) => {
             error = handleJWTError();
         if (error.name === 'TokenExpiredError')
             error = handleJWTExpiredError();
+        if (error.code === 'ERR_HTTP_INVALID_HEADER_VALUE')
+            error = handleInvalidAuthHeader();
         sendErrorProd(error, req, res);
     }
 };
