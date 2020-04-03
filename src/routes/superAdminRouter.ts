@@ -7,7 +7,6 @@ const router = express.Router();
 
 router.post('/signin', superAdminController.login);
 // router.post('/signup', superAdminController.signup);
-console.log('Admin router');
 router.post(
   '/newaccount',
   authenticate.protect,

@@ -113,9 +113,9 @@ const userAccountSchema = new mongoose.Schema({
     // edit
     enum: ['male', 'female', 'others'],
   },
-  martitialStatus: {
+  maritalStatus: {
     type: String,
-    // required: [true, 'Specify the martial status'],
+    // required: [true, 'Specify the marital status'],
     // Edit
     enum: ['married', 'single', 'others'],
   },
