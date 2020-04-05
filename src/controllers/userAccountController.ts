@@ -65,25 +65,49 @@ export const login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
+export const updateUserAccount = catchAsync(async (req: Request, res, next) => {
+  if (!req.user)
+    return next(
+      new AppError("Something went wrong, Couldn't find `req.user`", 401),
+    );
+
+  const { application } = req.body;
+
+  const userAccount = await UserAccount.findById(application.createdBy);
+
+  if (!userAccount) {
+    return next(
+      new AppError(
+        `Couldn\'t find the user with id ${application.createdBy}`,
+        400,
+      ),
+    );
+  }
+
+  userAccount.facilityArea = application.facilityAreaApplied;
+
+  userAccount.facilityType = application.facilityTypeApplied;
+
+  userAccount.updatedBy = req.user._id;
+  userAccount.updatedAt = Date.now();
+
+  const updatedUserAccount = await userAccount.save();
+
+  res.status(200).json({
+    status: 'SUCCESS',
+    userAccount: updatedUserAccount,
+  });
+});
+
 export const createUserAccount = catchAsync(async (req: Request, res, next) => {
   if (!req.user)
     return next(
-      new AppError("Something went wrong, Couldn't find `req.user`", 400),
+      new AppError("Something went wrong, Couldn't find `req.user`", 401),
     );
   const { application } = req.body;
   application.approvedBy = req.user._id;
   application.password = 'CRVS2020';
   application.approvedAt = Date.now();
-
-  // console.log(req.body);
-  // const reqBody: {
-  //   approvedBy: Schema.Types.ObjectId;
-  //   password: string;
-  // } = { ...req.body };
-  // reqBody.approvedBy = req.user._id;
-  // reqBody.password = 'CRVS2020';
-
-  // console.log(application);
 
   const userAccount = await UserAccount.create(application);
 

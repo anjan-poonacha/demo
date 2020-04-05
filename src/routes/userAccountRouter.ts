@@ -15,6 +15,12 @@ router.post(
   authController.protect,
   userController.createUserAccount,
 );
+
+router.patch(
+  '/userAccount',
+  authController.protect,
+  userController.updateUserAccount,
+);
 router.get('/nid/getCitizen', userController.getCitizen);
 
 router.get('/:email', userController.getUserAccount);

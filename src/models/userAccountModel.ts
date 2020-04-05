@@ -1,4 +1,4 @@
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Model, mongo } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import { Document } from 'mongoose';
@@ -13,6 +13,8 @@ export interface IUserAccount extends Document {
   facilityArea: string;
   firstName: string;
   correctPassword: Function;
+  updatedBy: string;
+  updatedAt: number;
 }
 
 const addressSchema = new mongoose.Schema<IUserAccount>({
@@ -169,7 +171,7 @@ const userAccountSchema = new mongoose.Schema({
     type: String,
     // required: [true, 'Please give a name']
   },
-  approvedOn: {
+  approvedAt: {
     type: Date,
     default: Date.now,
   },
@@ -181,6 +183,13 @@ const userAccountSchema = new mongoose.Schema({
     type: String,
     select: false,
     // required:true
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedBy: {
+    type: mongoose.Schema.Types.ObjectId,
   },
 });
 
