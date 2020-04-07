@@ -65,11 +65,45 @@ export const login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
+export const disableUserAccount = catchAsync(
+  async (req: Request, res, next) => {
+    if (!req.user) {
+      return next(new AppError('Something went wrong, Not Authorized', 401));
+    }
+
+    const { application } = req.body;
+
+    const userAccount = await UserAccount.findById(application.userId);
+
+    if (!userAccount) {
+      return next(
+        new AppError(
+          `Couldn\'t find the user with id ${application.userId}`,
+          400,
+        ),
+      );
+    }
+
+    userAccount.status = 'deactivated';
+
+    userAccount.deactivatedAt = Date.now();
+
+    userAccount.deactivatedBy = req.user._id;
+
+    const updatedUserAccount = await userAccount.save({
+      validateBeforeSave: false,
+    });
+
+    res.status(200).json({
+      status: 'SUCCESS',
+      userAccount: updatedUserAccount,
+    });
+  },
+);
+
 export const updateUserAccount = catchAsync(async (req: Request, res, next) => {
   if (!req.user)
-    return next(
-      new AppError("Something went wrong, Couldn't find `req.user`", 401),
-    );
+    return next(new AppError('Something went wrong, Not Authorized', 401));
 
   const { application } = req.body;
 
@@ -78,7 +112,7 @@ export const updateUserAccount = catchAsync(async (req: Request, res, next) => {
   if (!userAccount) {
     return next(
       new AppError(
-        `Couldn\'t find the user with id ${application.createdBy}`,
+        `Couldn't find the user with id ${application.createdBy}`,
         400,
       ),
     );
@@ -88,8 +122,8 @@ export const updateUserAccount = catchAsync(async (req: Request, res, next) => {
 
   userAccount.facilityType = application.facilityTypeApplied;
 
-  userAccount.updatedBy = req.user._id;
-  userAccount.updatedAt = Date.now();
+  userAccount.transferredBy = req.user._id;
+  userAccount.transferredAt = Date.now();
 
   const updatedUserAccount = await userAccount.save();
 
