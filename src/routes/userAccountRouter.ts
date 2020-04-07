@@ -21,6 +21,13 @@ router.patch(
   authController.protect,
   userController.updateUserAccount,
 );
+
+router.patch(
+  '/useraccount/disable',
+  authController.protect,
+  userController.disableUserAccount,
+);
+
 router.get('/nid/getCitizen', userController.getCitizen);
 
 router.get('/:email', userController.getUserAccount);
