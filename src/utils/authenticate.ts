@@ -52,7 +52,7 @@ export const protectResponse = catchAsync(async (req: Request, res, next) => {
     currentUser = await UserAccount.findById((decoded as { id: string }).id);
   }
 
-  if (!currentUser) {
+  if (!currentUser || currentUser.status !== 'active') {
     return next(
       new AppError("The User belonging to this token doesn't exists", 401),
     );
@@ -91,7 +91,9 @@ export const protect = catchAsync(async (req: Request, res, next) => {
     currentUser = await UserAccount.findById((decoded as { id: string }).id);
   }
 
-  if (!currentUser) {
+  console.log(currentUser);
+
+  if (!currentUser || currentUser.status !== 'active') {
     return next(
       new AppError("The User belonging to this token doesn't exists", 401),
     );
