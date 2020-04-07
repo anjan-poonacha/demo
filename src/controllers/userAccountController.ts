@@ -55,7 +55,10 @@ export const login = catchAsync(async (req, res, next) => {
   }
 
   // 2) Check if user exists && password is correct
-  const user = await UserAccount.findOne({ email }).select('+password');
+  const user = await UserAccount.findOne({
+    email,
+    status: { $eq: 'active' },
+  }).select('+password');
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect username or password', 403));
@@ -154,7 +157,7 @@ export const createUserAccount = catchAsync(async (req: Request, res, next) => {
 export const getUserAccount = catchAsync(async (req, res, next) => {
   const { email } = req.params;
 
-  const user = await UserAccount.findOne({ email });
+  const user = await UserAccount.findOne({ email, status: { $eq: 'active' } });
 
   const exist = user ? true : false;
 
