@@ -128,7 +128,9 @@ export const updateUserAccount = catchAsync(async (req: Request, res, next) => {
   userAccount.transferredBy = req.user._id;
   userAccount.transferredAt = Date.now();
 
-  const updatedUserAccount = await userAccount.save();
+  const updatedUserAccount = await userAccount.save({
+    validateBeforeSave: false,
+  });
 
   res.status(200).json({
     status: 'SUCCESS',
@@ -142,6 +144,7 @@ export const createUserAccount = catchAsync(async (req: Request, res, next) => {
       new AppError("Something went wrong, Couldn't find `req.user`", 401),
     );
   const { application } = req.body;
+  application.status = 'active';
   application.approvedBy = req.user._id;
   application.password = 'CRVS2020';
   application.approvedAt = Date.now();
