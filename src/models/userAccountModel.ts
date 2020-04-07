@@ -13,8 +13,12 @@ export interface IUserAccount extends Document {
   facilityArea: string;
   firstName: string;
   correctPassword: Function;
-  updatedBy: string;
-  updatedAt: number;
+  transferredBy: string;
+  transferredAt: number;
+  deactivatedBy: string;
+  deactivatedAt: number;
+  status: string;
+  // isActive: boolean;
 }
 
 const addressSchema = new mongoose.Schema<IUserAccount>({
@@ -38,9 +42,16 @@ const residentialAddressSchema = new mongoose.Schema({
 const userAccountSchema = new mongoose.Schema({
   status: {
     type: String,
-    enum: ['approved', 'unapproved', 'rejected'],
-    default: 'approved',
+    enum: {
+      values: ['active', 'deactivated', 'inactive'],
+      message: 'Status can only be ( active | inactive | deactivated )',
+    },
+    default: 'active',
   },
+  // isActive: {
+  //   type: Boolean,
+  //   default: true,
+  // },
   email: {
     type: String,
     // required: [true, 'Provide your email address'],
@@ -184,11 +195,16 @@ const userAccountSchema = new mongoose.Schema({
     select: false,
     // required:true
   },
-  updatedAt: {
+  transferredAt: {
     type: Date,
-    default: Date.now,
   },
-  updatedBy: {
+  transferredBy: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
+  deactivatedAt: {
+    type: Date,
+  },
+  deactivatedAtBy: {
     type: mongoose.Schema.Types.ObjectId,
   },
 });

@@ -4,6 +4,7 @@ import validator from 'validator';
 import { Document } from 'mongoose';
 
 export interface ISuperAdmin extends Document {
+  status: string;
   role: string;
   password: string;
   passwordConfirm?: string;
@@ -14,6 +15,14 @@ export interface ISuperAdmin extends Document {
 }
 
 const superAdminSchema = new mongoose.Schema<ISuperAdmin>({
+  status: {
+    type: String,
+    enum: {
+      values: ['active', 'deactivated', 'inactive'],
+      message: 'Status can only be ( active | inactive | deactivated )',
+    },
+    default: 'active',
+  },
   firstName: {
     type: String,
     required: [true, 'Give a First Name'],
