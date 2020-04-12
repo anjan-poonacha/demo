@@ -2,6 +2,14 @@ import mongoose, { Model, mongo } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import { Document } from 'mongoose';
+import {
+  MaritalStatus,
+  Role,
+  Ministry,
+  FacilityArea,
+  FacilityType,
+} from '../utils/enums';
+import AppError from '../utils/appError';
 
 export interface IUserAccount extends Document {
   role: string;
@@ -128,9 +136,19 @@ const userAccountSchema = new mongoose.Schema({
   },
   maritalStatus: {
     type: String,
-    // required: [true, 'Specify the marital status'],
-    // Edit
-    enum: ['married', 'single', 'others'],
+    enum: {
+      values: [
+        MaritalStatus.MARRIED,
+        MaritalStatus.DIVORCED,
+        MaritalStatus.OTHER,
+        MaritalStatus.SINGLE,
+        MaritalStatus.WIDOWED,
+      ],
+      message:
+        "maritalStatus should be either 'single', 'married', 'widowed','divorced' or 'other' ",
+    },
+
+    // required: true
   },
   vitialStatus: {
     type: String,
@@ -160,7 +178,7 @@ const userAccountSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Specify the ministry'],
     enum: {
-      values: ['MOH', 'MINALOC', 'MINAFFET'],
+      values: [Ministry.MINAFFET, Ministry.MINALOC, Ministry.MOH],
       message: 'Role can be either "MOH / MINALOC / MINAFFET"',
     },
   },
@@ -210,18 +228,29 @@ const userAccountSchema = new mongoose.Schema({
 });
 
 userAccountSchema.pre<IUserAccount>('save', function(next) {
-  if (
-    this.facilityType === 'community' ||
-    this.facilityType === 'healthFacility'
-  ) {
-    this.ministry = 'MOH';
+  if (this.facilityType) {
+    if (this.facilityType === FacilityType.HF) {
+      this.ministry = Ministry.MOH;
+    }
+    if (this.facilityType === FacilityType.EMBASSY) {
+      this.ministry = Ministry.MINAFFET;
+    }
+    if (this.facilityType === FacilityType.COMMUNITY) {
+      this.ministry = Ministry.MINALOC;
+    }
+  } else if (this.facilityArea) {
+    if (
+      this.facilityArea === FacilityArea.CELL ||
+      this.facilityArea === FacilityArea.SECTOR ||
+      this.facilityArea === FacilityArea.DISTRICT
+    ) {
+      this.facilityType = FacilityType.COMMUNITY;
+      this.ministry = Ministry.MINALOC;
+    }
+  } else {
+    return next(new AppError('Provide facilityType or facilityArea', 400));
   }
-  if (this.facilityType === 'embassy') {
-    this.ministry = 'MINAFFET';
-  }
-  if (this.facilityType === 'ministry') {
-    this.ministry = 'MINALOC';
-  }
+
   next();
 });
 
