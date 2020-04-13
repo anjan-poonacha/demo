@@ -5,6 +5,10 @@ import * as authController from '../utils/authenticate';
 
 const router = express.Router();
 
+// router.get('/', userController.getUsers);
+
+router.get('/me', authController.protect, userController.getMe);
+
 router.get('/statusCheck', userController.statusCheck);
 
 router.get('/protect', authController.protectResponse);
@@ -33,3 +37,4 @@ router.get('/nid/getCitizen', userController.getCitizen);
 router.get('/:email', userController.getUserAccount);
 
 export default router;
+//

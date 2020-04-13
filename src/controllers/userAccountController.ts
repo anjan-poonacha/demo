@@ -216,3 +216,22 @@ export const getCitizen: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getMe = catchAsync(async (req: Request, res, next) => {
+  res.status(200).json({
+    status: 'SUCCESS',
+    data: {
+      user: req.user,
+    },
+  });
+});
+
+export const getUsers = catchAsync(async (req: Request, res, next) => {
+  const users = await UserAccount.find();
+  res.status(200).json({
+    status: 'SUCCESS',
+    data: {
+      users,
+    },
+  });
+});

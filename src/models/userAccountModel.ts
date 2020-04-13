@@ -91,7 +91,7 @@ const userAccountSchema = new mongoose.Schema({
   facilityType: {
     type: String,
     enum: {
-      values: ['community', 'healthFacility', 'embassy', 'ministry'],
+      values: ['community', 'healthFacility', 'embassy'],
       message:
         'Facility type be ( community | healthFacility | embassy | ministry )',
     },
@@ -102,7 +102,7 @@ const userAccountSchema = new mongoose.Schema({
       values: ['cell', 'sector', 'district'],
       message: 'Facility type be ( cell | sector | district )',
     },
-    required: [true, 'Provide the facilityArea'],
+    // required: [true, 'Provide the facilityArea'],
   },
   photo: {
     type: String,
