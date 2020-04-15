@@ -228,6 +228,7 @@ const userAccountSchema = new mongoose.Schema({
 });
 
 userAccountSchema.pre<IUserAccount>('save', function(next) {
+  if (this.isModified('transferredAt') || !this.isNew) return next();
   if (this.facilityType) {
     if (this.facilityType === FacilityType.HF) {
       this.ministry = Ministry.MOH;

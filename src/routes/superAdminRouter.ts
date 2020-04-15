@@ -6,7 +6,7 @@ import * as authenticate from '../utils/authenticate';
 const router = express.Router();
 
 router.post('/signin', superAdminController.login);
-// router.post('/signup', superAdminController.signup);
+router.post('/signup', superAdminController.signup);
 router.post(
   '/newaccount',
   authenticate.protect,
