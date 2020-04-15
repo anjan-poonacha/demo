@@ -5,7 +5,7 @@ import * as authController from '../utils/authenticate';
 
 const router = express.Router();
 
-// router.get('/', userController.getUsers);
+router.get('/id/:id', userController.getUserById);
 
 router.get('/me', authController.protect, userController.getMe);
 
@@ -34,7 +34,7 @@ router.patch(
 
 router.get('/nid/getCitizen', userController.getCitizen);
 
-router.get('/:email', userController.getUserAccount);
+router.get('/email/:email', userController.getUserAccount);
 
 export default router;
 //

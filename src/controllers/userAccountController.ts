@@ -226,12 +226,13 @@ export const getMe = catchAsync(async (req: Request, res, next) => {
   });
 });
 
-export const getUsers = catchAsync(async (req: Request, res, next) => {
-  const users = await UserAccount.find();
+export const getUserById = catchAsync(async (req: Request, res, next) => {
+  const _id = req.params.id;
+  const user = await UserAccount.findOne({ _id });
   res.status(200).json({
     status: 'SUCCESS',
     data: {
-      users,
+      user,
     },
   });
 });
