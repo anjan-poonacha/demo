@@ -15,6 +15,8 @@ const signToken = (
   firstName: string,
   facilityType: string,
   facilityArea: string,
+  facilityName: string,
+  facilityId: string,
 ) => {
   return jwt.sign(
     { id, role, ministry, firstName, facilityArea, facilityType },
@@ -37,6 +39,8 @@ const createSendToken = (
     user.firstName,
     user.facilityType,
     user.facilityArea,
+    user.facilityName,
+    user.facilityId,
   );
 
   // REMOVE THE PASSWORD FROM THE OUTPUT

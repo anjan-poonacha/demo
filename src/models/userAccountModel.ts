@@ -26,6 +26,8 @@ export interface IUserAccount extends Document {
   deactivatedBy: string;
   deactivatedAt: number;
   status: string;
+  facilityName: string;
+  facilityId: string;
   // isActive: boolean;
 }
 
@@ -223,6 +225,9 @@ const userAccountSchema = new mongoose.Schema({
     type: Date,
   },
   deactivatedAtBy: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
+  facilityId: {
     type: mongoose.Schema.Types.ObjectId,
   },
 });
