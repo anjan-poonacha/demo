@@ -228,7 +228,7 @@ const userAccountSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
   },
   facilityId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
   },
 });
 
