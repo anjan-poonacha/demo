@@ -19,7 +19,16 @@ const signToken = (
   facilityId: string,
 ) => {
   return jwt.sign(
-    { id, role, ministry, firstName, facilityArea, facilityType },
+    {
+      id,
+      role,
+      ministry,
+      firstName,
+      facilityArea,
+      facilityType,
+      facilityName,
+      facilityId,
+    },
     (process.env as { JWT_SECRET: string }).JWT_SECRET,
     {
       expiresIn: process.env.JWT_EXPIRES_IN,
