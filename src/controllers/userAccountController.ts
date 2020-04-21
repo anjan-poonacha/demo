@@ -162,6 +162,9 @@ export const createUserAccount = catchAsync(async (req: Request, res, next) => {
   application.password = 'CRVS2020';
   application.approvedAt = Date.now();
 
+  // duplicate field bug
+  application._id = undefined;
+
   const userAccount = await UserAccount.create(application);
 
   res.status(201).json({
@@ -196,14 +199,15 @@ export const getCitizen: RequestHandler = async (req, res, next) => {
   try {
     const result = await axios({
       method: 'post',
-      url: 'https://uat.nida.gov.rw:8081/onlineauthentication/claimtoken',
+      url:
+        'https://onlineauthentication.nida.gov.rw/onlineauthentication/claimtoken',
       headers: {
         'Content-Type': 'application/json',
       },
       data: {
         username: 'CRVS-QT',
         password:
-          ' hLA_fg2FRRyWeK37DY!VH-7uZ6OUigrzBDu@1oKWv?fW3fd!_rc-RgiiUgppJixKz-uSq8gpopzK!kGU3UW7erYvumsU-unnRMw41BUfj31CYQpJQMC4DFFir-xeRCq!',
+          'hLA_fg2FRRyWeK37DY!VH-7uZ6OUigrzBDu@1oKWv?fW3fd!_rc-RgiiUgppJixKz-uSq8gpopzK!kGU3UW7erYvumsU-unnRMw41BUfj31CYQpJQMC4DFFir-xeRCq!',
       },
     });
     console.log(result);
