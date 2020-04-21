@@ -194,6 +194,20 @@ const TOKEN =
 
 export const getCitizen: RequestHandler = async (req, res, next) => {
   try {
+    const result = await axios({
+      method: 'post',
+      url: 'https://uat.nida.gov.rw:8081/onlineauthentication/claimtoken',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        username: 'CRVS-QT',
+        password:
+          ' hLA_fg2FRRyWeK37DY!VH-7uZ6OUigrzBDu@1oKWv?fW3fd!_rc-RgiiUgppJixKz-uSq8gpopzK!kGU3UW7erYvumsU-unnRMw41BUfj31CYQpJQMC4DFFir-xeRCq!',
+      },
+    });
+    console.log(result);
+
     const { nid } = req.query as { nid: string };
     if (!nid) {
       throw new Error(
