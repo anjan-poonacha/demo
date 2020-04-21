@@ -8,6 +8,7 @@ import {
   Ministry,
   FacilityArea,
   FacilityType,
+  Status,
 } from '../utils/enums';
 import AppError from '../utils/appError';
 
@@ -53,10 +54,10 @@ const userAccountSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: {
-      values: ['active', 'deactivated', 'inactive'],
-      message: 'Status can only be ( active | inactive | deactivated )',
+      values: [Status.ACTIVE, Status.INACTIVE, Status.DEACTIVATED],
+      message: `Status can only be ( ${Status.ACTIVE} | ${Status.DEACTIVATED} | ${Status.INACTIVE} )`,
     },
-    default: 'active',
+    default: Status.ACTIVE,
   },
   // isActive: {
   //   type: Boolean,
@@ -80,7 +81,10 @@ const userAccountSchema = new mongoose.Schema({
   role: {
     type: String,
     required: [true, 'Specify the role applying for.'],
-    enum: ['ministryAdmin', 'notifier', 'cr', 'cro'],
+    enum: {
+      values: [Role.MA, Role.CR, Role.CRO, Role.NOTIFIER],
+      message: `Options for ( ${Role.MA} | ${Role.CR} | ${Role.CRO} | ${Role.NOTIFIER} )`,
+    },
   },
   occupiedPositon: {
     type: String,
@@ -88,21 +92,29 @@ const userAccountSchema = new mongoose.Schema({
   },
   facilityName: {
     type: String,
-    // required: [true, 'Provide a facilityName']
+    required: [true, 'Provide a facilityName'],
   },
   facilityType: {
     type: String,
     enum: {
-      values: ['community', 'healthFacility', 'embassy'],
-      message:
-        'Facility type be ( community | healthFacility | embassy | ministry )',
+      values: [FacilityType.HF, FacilityType.COMMUNITY, FacilityType.EMBASSY],
+      message: `facilityType options -> ( ${FacilityType.HF} | ${FacilityType.COMMUNITY} | ${FacilityType.EMBASSY} )`,
     },
+    // required: [true, 'Provide a facilityType'],
   },
   facilityArea: {
     type: String,
     enum: {
-      values: ['cell', 'sector', 'district'],
-      message: 'Facility type be ( cell | sector | district )',
+      values: [
+        FacilityArea.CELL,
+        FacilityArea.SECTOR,
+        FacilityArea.DISTRICT,
+        FacilityArea.VILLAGE,
+        FacilityArea.HF,
+        FacilityArea.PROVINCE,
+        FacilityArea.EMBASSY,
+      ],
+      message: `Facility type can be ( ${FacilityArea.HF} | ${FacilityArea.SECTOR} | ${FacilityArea.CELL} | ${FacilityArea.PROVINCE} | ${FacilityArea.DISTRICT} | ${FacilityArea.EMBASSY} | ${FacilityArea.VILLAGE})`,
     },
     // required: [true, 'Provide the facilityArea'],
   },
@@ -138,19 +150,18 @@ const userAccountSchema = new mongoose.Schema({
   },
   maritalStatus: {
     type: String,
+    // required: [true, 'Specify the marital status'],
+    // Edit
     enum: {
       values: [
-        MaritalStatus.MARRIED,
         MaritalStatus.DIVORCED,
-        MaritalStatus.OTHER,
         MaritalStatus.SINGLE,
         MaritalStatus.WIDOWED,
+        MaritalStatus.OTHER,
+        MaritalStatus.MARRIED,
       ],
-      message:
-        "maritalStatus should be either 'single', 'married', 'widowed','divorced' or 'other' ",
+      message: `maritalStatus can be ( ${MaritalStatus.DIVORCED} | ${MaritalStatus.SINGLE} | ${MaritalStatus.WIDOWED} | ${MaritalStatus.OTHER} | ${MaritalStatus.MARRIED} )`,
     },
-
-    // required: true
   },
   vitialStatus: {
     type: String,
@@ -181,7 +192,7 @@ const userAccountSchema = new mongoose.Schema({
     required: [true, 'Specify the ministry'],
     enum: {
       values: [Ministry.MINAFFET, Ministry.MINALOC, Ministry.MOH],
-      message: 'Role can be either "MOH / MINALOC / MINAFFET"',
+      message: `Role can be either "${Ministry.MINAFFET} / ${Ministry.MINALOC} / ${Ministry.MOH}"`,
     },
   },
   phone: {
@@ -229,6 +240,10 @@ const userAccountSchema = new mongoose.Schema({
   },
   facilityId: {
     type: String,
+    required: [
+      true,
+      'Provide the facilityId (HF_ID | Cell_ID | Sector_ID | Province_ID | District_ID | Embassy_ID)',
+    ],
   },
 });
 

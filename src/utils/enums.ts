@@ -18,16 +18,22 @@ export enum Ministry {
   MINALOC = 'MINALOC',
 }
 export enum FacilityArea {
+  HF = 'healthFacility',
   CELL = 'cell',
   SECTOR = 'sector',
+  PROVINCE = 'province',
   DISTRICT = 'district',
   VILLAGE = 'village',
+  EMBASSY = 'embassy',
 }
 
 export enum Status {
   UNAPPROVED = 'unapproved',
   APPROVED = 'approved',
   REJECTED = 'rejected',
+  ACTIVE = 'active',
+  DEACTIVATED = 'deactivated',
+  INACTIVE = 'inactive',
 }
 
 export enum MaritalStatus {
