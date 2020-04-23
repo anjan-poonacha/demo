@@ -6,6 +6,7 @@ import AppError from './appError';
 import catchAsync from './catchAsync';
 import SuperAdmin from '../models/superAdminModel';
 import UserAccount from '../models/userAccountModel';
+import { Role } from './enums';
 
 export const restrictTo = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -46,7 +47,7 @@ export const protectResponse = catchAsync(async (req: Request, res, next) => {
   // 3. Check if user still exists
 
   let currentUser;
-  if ((decoded as { role: string }).role === 'superadmin') {
+  if ((decoded as { role: string }).role === Role.SA) {
     currentUser = await SuperAdmin.findById((decoded as { id: string }).id);
   } else {
     currentUser = await UserAccount.findById((decoded as { id: string }).id);
@@ -85,7 +86,7 @@ export const protect = catchAsync(async (req: Request, res, next) => {
   // 3. Check if user still exists
 
   let currentUser;
-  if ((decoded as { role: string }).role === 'superadmin') {
+  if ((decoded as { role: string }).role === Role.SA) {
     currentUser = await SuperAdmin.findById((decoded as { id: string }).id);
   } else {
     currentUser = await UserAccount.findById((decoded as { id: string }).id);

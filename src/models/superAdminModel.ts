@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import mongoose, { Model, Schema } from 'mongoose';
 import validator from 'validator';
 import { Document } from 'mongoose';
+import { Role } from '../utils/enums';
 
 export interface ISuperAdmin extends Document {
   status: string;
@@ -68,7 +69,7 @@ const superAdminSchema = new mongoose.Schema<ISuperAdmin>({
   },
   role: {
     type: String,
-    default: 'superadmin',
+    default: Role.SA,
   },
   createdBy: Schema.Types.ObjectId,
   createdAt: Date,

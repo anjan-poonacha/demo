@@ -2,6 +2,7 @@ import express from 'express';
 
 import * as superAdminController from '../controllers/superAdminController';
 import * as authenticate from '../utils/authenticate';
+import { Role } from '../utils/enums';
 
 const router = express.Router();
 
@@ -10,7 +11,7 @@ router.post('/signup', superAdminController.signup);
 router.post(
   '/newaccount',
   authenticate.protect,
-  authenticate.restrictTo('superadmin'),
+  authenticate.restrictTo(Role.SA),
   superAdminController.createSuperAdmin,
 );
 
