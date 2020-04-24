@@ -7,7 +7,7 @@ import globalErrorHandler from './controllers/errorController';
 import AppError from './utils/appError';
 import superAdminRouter from './routes/superAdminRouter';
 import userRouter from './routes/userAccountRouter';
-import tokenRouter from './routes/userAccountRouter';
+import tokenRouter from './routes/tokenRouter';
 
 const app = express();
 
