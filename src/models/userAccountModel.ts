@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import mongoose, { Model, mongo } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
@@ -30,6 +31,8 @@ export interface IUserAccount extends Document {
   facilityName: string;
   facilityId: string;
   passwordChangedAt: Date;
+  OTPExpiresAt: Date;
+  OTPToken: string;
   // isActive: boolean;
 }
 
@@ -263,6 +266,8 @@ const userAccountSchema = new mongoose.Schema({
     // ],
   },
   passwordChangedAt: Date,
+  OTPExpiresAt: Date,
+  OTPToken: String,
 });
 
 userAccountSchema.pre<IUserAccount>('save', function(next) {
@@ -306,6 +311,18 @@ userAccountSchema.pre<IUserAccount>('save', function(next) {
   this.passwordChangedAt = new Date(Date.now() - 1000);
   next();
 });
+
+userAccountSchema.methods.createPasswordReset = async function() {
+  const OTP = ('' + Math.random()).substring(2, 8);
+
+  this.OTPToken = crypto
+    .createHash('sha256')
+    .update(OTP)
+    .digest('hex');
+  this.OTPExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+  return OTP;
+};
 
 userAccountSchema.methods.correctPassword = async function(
   candidatePassword: string,

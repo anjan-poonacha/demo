@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { promisify } from 'util';
 import { Response, Request, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
@@ -130,4 +131,11 @@ export const updatePassword = catchAsync(async (req: Request, res, next) => {
       user: userNewPassword,
     },
   });
+});
+
+export const resetPassword = catchAsync(async (req: Request, res, next) => {
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.body.otp)
+    .digest('hex');
 });
