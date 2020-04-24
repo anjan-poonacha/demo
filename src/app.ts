@@ -7,6 +7,7 @@ import globalErrorHandler from './controllers/errorController';
 import AppError from './utils/appError';
 import superAdminRouter from './routes/superAdminRouter';
 import userRouter from './routes/userAccountRouter';
+import tokenRouter from './routes/userAccountRouter';
 
 const app = express();
 
@@ -26,6 +27,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use('/auth/api/v1/admins', superAdminRouter);
 app.use('/auth/api/v1/users', userRouter);
+app.use('/api/v1/tokens', tokenRouter);
 
 // ERROR HANDLING
 app.all('*', (req, res, next) => {
