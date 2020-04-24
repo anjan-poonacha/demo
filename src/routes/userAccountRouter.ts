@@ -14,6 +14,12 @@ router.get('/statusCheck', userController.statusCheck);
 router.get('/protect', authController.protectResponse);
 router.post('/login', userController.login);
 
+router.patch(
+  '/updateMyPassword',
+  authController.protect,
+  authController.updatePassword,
+);
+
 router.post(
   '/userAccount',
   authController.protect,

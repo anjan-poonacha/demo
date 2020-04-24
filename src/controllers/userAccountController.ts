@@ -195,23 +195,10 @@ export const statusCheck: RequestHandler = (req, res, next) => {
 const TOKEN =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFYnBJZCI6IjI4IiwiRWJwTmFtZSI6IkNSVlNfUVQiLCJPdGsiOiJtU0tSQWxDTVNIakNkVEdZeHNQVWhLY213UWlXMldhdUJPZjArM052aDhDditUSVZSYjUxdUdSVTFDbHdOZTVYYldJTmhWcFhnU1N3WWlxT3h3ZXQzUT09IiwianRpIjoiMjhhZTZjYzMtNGVjMC00OGJlLTlkMmEtYjEzZDQ1NzgyNmFlIiwibmJmIjoxNTgyNzgxMTQwLCJleHAiOjE1ODI3OTU1NDAsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDI4Ni8iLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjQyODYvIn0.IgDl3Wml2Z5rJ10Oxm3GWYEt8DYkmR0v7uKYnZ72ryY';
 
+// TODO Request the token from the Database and update the token
+
 export const getCitizen: RequestHandler = async (req, res, next) => {
   try {
-    const result = await axios({
-      method: 'post',
-      url:
-        'https://onlineauthentication.nida.gov.rw/onlineauthentication/claimtoken',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        username: 'CRVS-QT',
-        password:
-          'hLA_fg2FRRyWeK37DY!VH-7uZ6OUigrzBDu@1oKWv?fW3fd!_rc-RgiiUgppJixKz-uSq8gpopzK!kGU3UW7erYvumsU-unnRMw41BUfj31CYQpJQMC4DFFir-xeRCq!',
-      },
-    });
-    console.log(result);
-
     const { nid } = req.query as { nid: string };
     if (!nid) {
       throw new Error(

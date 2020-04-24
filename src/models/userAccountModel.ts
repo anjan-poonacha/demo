@@ -29,6 +29,7 @@ export interface IUserAccount extends Document {
   status: string;
   facilityName: string;
   facilityId: string;
+  passwordChangedAt: Date;
   // isActive: boolean;
 }
 
@@ -92,7 +93,7 @@ const userAccountSchema = new mongoose.Schema({
   },
   facilityName: {
     type: String,
-    required: [true, 'Provide a facilityName'],
+    // required: [true, 'Provide a facilityName'],
   },
   facilityType: {
     type: String,
@@ -179,7 +180,7 @@ const userAccountSchema = new mongoose.Schema({
   },
   residentialAddress: {
     type: residentialAddressSchema,
-    required: [true, 'Provide the Residential Address'],
+    // required: [true, 'Provide the Residential Address'],
   },
   // profession: { type: String, required: true },
   // occupation: { type: String, required: true },
@@ -189,7 +190,7 @@ const userAccountSchema = new mongoose.Schema({
   },
   ministry: {
     type: String,
-    required: [true, 'Specify the ministry'],
+    // required: [true, 'Specify the ministry'],
     enum: {
       values: [Ministry.MINAFFET, Ministry.MINALOC, Ministry.MOH],
       message: `Role can be either "${Ministry.MINAFFET} / ${Ministry.MINALOC} / ${Ministry.MOH}"`,
@@ -224,7 +225,23 @@ const userAccountSchema = new mongoose.Schema({
   password: {
     type: String,
     select: false,
-    // required:true
+    required: [true, 'Provide the password'],
+    minlength: 8,
+  },
+  passwordConfirm: {
+    type: String,
+    required: [
+      function(this: IUserAccount) {
+        return this.password !== 'CRVS2020'; /* CRVS2020 use config variable */
+      },
+      'Provide the passwordConfirm',
+    ],
+    validate: {
+      validator: function(this: IUserAccount, el: string) {
+        return el === this.password;
+      },
+      message: `Passwords are not the same`,
+    },
   },
   transferredAt: {
     type: Date,
@@ -240,15 +257,16 @@ const userAccountSchema = new mongoose.Schema({
   },
   facilityId: {
     type: String,
-    required: [
-      true,
-      'Provide the facilityId (HF_ID | Cell_ID | Sector_ID | Province_ID | District_ID | Embassy_ID)',
-    ],
+    // required: [
+    //   true,
+    //   'Provide the facilityId (HF_ID | Cell_ID | Sector_ID | Province_ID | District_ID | Embassy_ID)',
+    // ],
   },
+  passwordChangedAt: Date,
 });
 
 userAccountSchema.pre<IUserAccount>('save', function(next) {
-  if (this.isModified('transferredAt') || !this.isNew) return next();
+  if (!this.isModified('transferredAt') && !this.isNew) return next();
   if (this.facilityType) {
     if (this.facilityType === FacilityType.HF) {
       this.ministry = Ministry.MOH;
@@ -280,6 +298,13 @@ userAccountSchema.pre<IUserAccount>('save', async function(next) {
 
   this.password = await bcrypt.hash(this.password!, 12);
   this.passwordConfirm = undefined;
+});
+
+userAccountSchema.pre<IUserAccount>('save', function(next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = new Date(Date.now() - 1000);
+  next();
 });
 
 userAccountSchema.methods.correctPassword = async function(

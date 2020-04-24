@@ -103,3 +103,31 @@ export const protect = catchAsync(async (req: Request, res, next) => {
 
   next();
 });
+
+export const updatePassword = catchAsync(async (req: Request, res, next) => {
+  if (!req.user) {
+    return next(new AppError('Something went wrong, Not Authenticated', 401));
+  }
+  const { email, currentPassword, newPassword, passwordConfirm } = req.body;
+  const user = await UserAccount.findOne({ email }).select('+password');
+  console.log(user!.password);
+  if (!user) {
+    return next(
+      new AppError("Couldn't find the user with email " + email, 404),
+    );
+  }
+  if (!(await user?.correctPassword(currentPassword, user.password))) {
+    return next(new AppError('Your password is wrong', 401));
+  }
+
+  user.password = newPassword;
+  user.passwordConfirm = passwordConfirm;
+
+  const userNewPassword = await user.save();
+  res.status(200).json({
+    status: 'SUCCESS',
+    data: {
+      user: userNewPassword,
+    },
+  });
+});
