@@ -14,6 +14,7 @@ import {
 import AppError from '../utils/appError';
 
 export interface IUserAccount extends Document {
+  email: string;
   role: string;
   facilityType: string;
   residentialAddress?: any;
@@ -31,8 +32,9 @@ export interface IUserAccount extends Document {
   facilityName: string;
   facilityId: string;
   passwordChangedAt: Date;
-  OTPExpiresAt: Date;
-  OTPToken: string;
+  OTPExpiresAt: Date | undefined;
+  OTPToken: string | undefined;
+  createPasswordResetToken: () => string;
   // isActive: boolean;
 }
 
@@ -312,7 +314,7 @@ userAccountSchema.pre<IUserAccount>('save', function(next) {
   next();
 });
 
-userAccountSchema.methods.createPasswordReset = async function() {
+userAccountSchema.methods.createPasswordResetToken = async function() {
   const OTP = ('' + Math.random()).substring(2, 8);
 
   this.OTPToken = crypto
@@ -339,3 +341,15 @@ const UserAccount: Model<IUserAccount> = mongoose.model<IUserAccount>(
 );
 
 export default UserAccount;
+
+// userAccountSchema.methods.passwordChangedAfter = async function(
+//   JWTTimeStamp: number,
+// ) {
+//   if (this.passwordChanged) {
+//     const changedTimeStamp = this.passwordChanged.getTime() / 1000;
+
+//     return JWTTimeStamp < changedTimeStamp;
+//   }
+
+//   return false;
+// };
