@@ -9,6 +9,7 @@ export interface ISuperAdmin extends Document {
   role: string;
   password: string;
   passwordConfirm?: string;
+  passwordChanged: Date;
   correctPassword: (
     inputPassword: string,
     expectedPassword: string,
@@ -75,6 +76,7 @@ const superAdminSchema = new mongoose.Schema<ISuperAdmin>({
   },
   createdBy: Schema.Types.ObjectId,
   createdAt: Date,
+  passwordChanged: Date,
 });
 
 superAdminSchema.pre<ISuperAdmin>('save', async function(next) {
@@ -83,6 +85,15 @@ superAdminSchema.pre<ISuperAdmin>('save', async function(next) {
   this.password = await bcrypt.hash(this.password!, 12);
   this.passwordConfirm = undefined;
 });
+
+superAdminSchema.methods.passwordChangedAfter = function(JWTTimeStamp: number) {
+  if (this.passwordChanged) {
+    const changedTimeStamp = this.passwordChanged.getTime() / 1000;
+
+    return JWTTimeStamp < changedTimeStamp;
+  }
+  return false;
+};
 
 superAdminSchema.methods.correctPassword = async function(
   candidatePassword: string,
