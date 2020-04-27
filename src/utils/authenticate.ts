@@ -6,8 +6,62 @@ import * as jwt from 'jsonwebtoken';
 import AppError from './appError';
 import catchAsync from './catchAsync';
 import SuperAdmin from '../models/superAdminModel';
-import UserAccount from '../models/userAccountModel';
+import UserAccount, { IUserAccount } from '../models/userAccountModel';
 import { Role } from './enums';
+import { Schema } from 'mongoose';
+import { sendEmail } from './email';
+
+export const signToken = (
+  id: Schema.Types.ObjectId,
+  role: string,
+  ministry: string,
+  firstName: string,
+  facilityType: string,
+  facilityArea: string,
+  facilityName: string,
+  facilityId: string,
+) => {
+  return jwt.sign(
+    {
+      id,
+      role,
+      ministry,
+      firstName,
+      facilityArea,
+      facilityType,
+      facilityName,
+      facilityId,
+    },
+    (process.env as { JWT_SECRET: string }).JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    },
+  );
+};
+
+export const createSendToken = (
+  user: IUserAccount,
+  statusCode: number,
+  res: Response,
+) => {
+  const token = signToken(
+    user._id,
+    user.role,
+    user.ministry,
+    user.firstName,
+    user.facilityType,
+    user.facilityArea,
+    user.facilityName,
+    user.facilityId,
+  );
+
+  // REMOVE THE PASSWORD FROM THE OUTPUT
+  user.password = undefined;
+  res.status(statusCode).json({
+    status: 'SUCCESS',
+    token,
+  });
+};
 
 export const restrictTo = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -19,16 +73,6 @@ export const restrictTo = (...roles: string[]) => {
     next();
   };
 };
-
-// declare module 'express' {
-//   export interface Request {
-//     user?: any;
-//   }
-// }
-
-// export interface IUserRequest extends Request {
-//   user?: any;
-// }
 
 export const protectResponse = catchAsync(async (req: Request, res, next) => {
   let token: string;
@@ -133,9 +177,73 @@ export const updatePassword = catchAsync(async (req: Request, res, next) => {
   });
 });
 
+export const forgotPassword = catchAsync(async (req: Request, res, next) => {
+  const { email } = req.body;
+  const user = await UserAccount.findOne({ email });
+  if (!user) {
+    return next(
+      new AppError(
+        'There is no user associated with this email:_ ' + email,
+        404,
+      ),
+    );
+  }
+
+  const resetOTP = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  const resetURL =
+    process.env.NOTIFY_HOST +
+    ':' +
+    process.env.NOTIFY_PORT +
+    '/notify/api/v1/email';
+
+  const message = `Forgot Password? Submit PATCH request with your new password and passwordConfirm to ${resetURL} with the OTP.\n Your One time password is valid for 10 minutes. OTP:${resetOTP}`;
+
+  try {
+    await sendEmail({
+      secret: process.env.EMAIL_SECRETKEY,
+      email: user.email,
+      subject: `Your password reset token (Valid for 10 mins)`,
+      message,
+    });
+    res
+      .status(200)
+      .json({ status: `SUCCESS`, message: `Your token is sent via email!` });
+  } catch (err) {
+    user.OTPToken = undefined;
+    user.OTPExpiresAt = undefined;
+    await user.save({ validateBeforeSave: false });
+    return next(
+      new AppError(
+        'There was error trying to send an email. Try again later!',
+        500,
+      ),
+    );
+  }
+});
+
 export const resetPassword = catchAsync(async (req: Request, res, next) => {
   const hashedToken = crypto
     .createHash('sha256')
     .update(req.body.otp)
     .digest('hex');
+
+  const user = await UserAccount.findOne({
+    hashedToken,
+    OTPExpiresAt: { lt: Date.now() },
+  });
+
+  console.log(user?.OTPExpiresAt, Date.now());
+
+  if (!user) {
+    return next(new AppError('Token is invalid or has expired', 500));
+  }
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.OTPToken = undefined;
+  user.OTPExpiresAt = undefined;
+  await user.save();
+  createSendToken(user, 200, res);
 });
