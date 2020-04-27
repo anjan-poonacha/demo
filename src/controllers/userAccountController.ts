@@ -1,64 +1,10 @@
-import jwt from 'jsonwebtoken';
+import { RequestHandler, Request } from 'express';
 import axios, { AxiosError } from 'axios';
 
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
-import UserAccount, { IUserAccount } from '../models/userAccountModel';
-import { RequestHandler, Response, Request } from 'express';
-// import { IUserRequest } from '../utils/authenticate';
-import { Schema } from 'mongoose';
-
-const signToken = (
-  id: Schema.Types.ObjectId,
-  role: string,
-  ministry: string,
-  firstName: string,
-  facilityType: string,
-  facilityArea: string,
-  facilityName: string,
-  facilityId: string,
-) => {
-  return jwt.sign(
-    {
-      id,
-      role,
-      ministry,
-      firstName,
-      facilityArea,
-      facilityType,
-      facilityName,
-      facilityId,
-    },
-    (process.env as { JWT_SECRET: string }).JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    },
-  );
-};
-
-const createSendToken = (
-  user: IUserAccount,
-  statusCode: number,
-  res: Response,
-) => {
-  const token = signToken(
-    user._id,
-    user.role,
-    user.ministry,
-    user.firstName,
-    user.facilityType,
-    user.facilityArea,
-    user.facilityName,
-    user.facilityId,
-  );
-
-  // REMOVE THE PASSWORD FROM THE OUTPUT
-  user.password = undefined;
-  res.status(statusCode).json({
-    status: 'SUCCESS',
-    token,
-  });
-};
+import UserAccount from '../models/userAccountModel';
+import { createSendToken } from '../utils/authenticate';
 
 export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
