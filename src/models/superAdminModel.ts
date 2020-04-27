@@ -13,6 +13,8 @@ export interface ISuperAdmin extends Document {
     inputPassword: string,
     expectedPassword: string,
   ) => Promise<boolean>;
+
+  passwordChangedAfter: (JWTTimeStamp: number) => boolean;
 }
 
 const superAdminSchema = new mongoose.Schema<ISuperAdmin>({

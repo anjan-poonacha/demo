@@ -23,7 +23,6 @@ export interface IUserAccount extends Document {
   passwordConfirm: string | undefined;
   facilityArea: string;
   firstName: string;
-  correctPassword: Function;
   transferredBy: string;
   transferredAt: number;
   deactivatedBy: string;
@@ -34,7 +33,9 @@ export interface IUserAccount extends Document {
   passwordChangedAt: Date;
   OTPExpiresAt: Date | undefined;
   OTPToken: string | undefined;
+  correctPassword: Function;
   createPasswordResetToken: () => string;
+  passwordChangedAfter: (JWTTimeStamp: number) => boolean;
   // isActive: boolean;
 }
 
@@ -326,6 +327,18 @@ userAccountSchema.methods.createPasswordResetToken = function() {
   return OTP;
 };
 
+userAccountSchema.methods.passwordChangedAfter = function(
+  JWTTimeStamp: number,
+) {
+  if (this.passwordChanged) {
+    const changedTimeStamp = this.passwordChanged.getTime() / 1000;
+
+    return JWTTimeStamp < changedTimeStamp;
+  }
+
+  return false;
+};
+
 userAccountSchema.methods.correctPassword = async function(
   candidatePassword: string,
   userPassword: string,
@@ -341,15 +354,3 @@ const UserAccount: Model<IUserAccount> = mongoose.model<IUserAccount>(
 );
 
 export default UserAccount;
-
-// userAccountSchema.methods.passwordChangedAfter = async function(
-//   JWTTimeStamp: number,
-// ) {
-//   if (this.passwordChanged) {
-//     const changedTimeStamp = this.passwordChanged.getTime() / 1000;
-
-//     return JWTTimeStamp < changedTimeStamp;
-//   }
-
-//   return false;
-// };

@@ -104,6 +104,15 @@ export const protectResponse = catchAsync(async (req: Request, res, next) => {
     );
   }
 
+  if (currentUser.passwordChangedAfter((decoded as { iat: number }).iat)) {
+    return next(
+      new AppError(
+        'User changed the password recently. Please login again!',
+        401,
+      ),
+    );
+  }
+
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
   res.status(200).json({
@@ -140,6 +149,15 @@ export const protect = catchAsync(async (req: Request, res, next) => {
   if (!currentUser || currentUser.status !== 'active') {
     return next(
       new AppError("The User belonging to this token doesn't exists", 401),
+    );
+  }
+
+  if (currentUser.passwordChangedAfter((decoded as { iat: number }).iat)) {
+    return next(
+      new AppError(
+        'User changed the password recently. Please login again!',
+        401,
+      ),
     );
   }
 
