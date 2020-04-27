@@ -193,12 +193,12 @@ export const forgotPassword = catchAsync(async (req: Request, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   const resetURL =
-    process.env.NOTIFY_HOST +
+    process.env.AUTH_SERVICE_HOST +
     ':' +
-    process.env.NOTIFY_PORT +
-    '/notify/api/v1/email';
+    process.env.AUTH_SERVICE_PORT +
+    '/auth/api/v1/users/resetPassword';
 
-  const message = `Forgot Password? Submit PATCH request with your new password and passwordConfirm to ${resetURL} with the OTP.\n Your One time password is valid for 10 minutes. OTP:${resetOTP}`;
+  const message = `Forgot Password? Submit PATCH request with your new password and passwordConfirm to ${resetURL} with the OTP.\nYour One time password is valid for 10 minutes.\nOTP:${resetOTP}`;
 
   try {
     await sendEmail({
@@ -230,11 +230,9 @@ export const resetPassword = catchAsync(async (req: Request, res, next) => {
     .digest('hex');
 
   const user = await UserAccount.findOne({
-    hashedToken,
-    OTPExpiresAt: { lt: Date.now() },
+    OTPToken: hashedToken,
+    OTPExpiresAt: { $gt: new Date(Date.now()) },
   });
-
-  console.log(user?.OTPExpiresAt, Date.now());
 
   if (!user) {
     return next(new AppError('Token is invalid or has expired', 500));

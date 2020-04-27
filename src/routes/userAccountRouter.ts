@@ -13,6 +13,8 @@ router.get('/statusCheck', userController.statusCheck);
 
 router.get('/protect', authController.protectResponse);
 router.post('/login', userController.login);
+router.post('/forgotPassword', authController.forgotPassword);
+router.patch('/resetPassword', authController.resetPassword);
 
 router.patch(
   '/updateMyPassword',

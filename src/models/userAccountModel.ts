@@ -314,7 +314,7 @@ userAccountSchema.pre<IUserAccount>('save', function(next) {
   next();
 });
 
-userAccountSchema.methods.createPasswordResetToken = async function() {
+userAccountSchema.methods.createPasswordResetToken = function() {
   const OTP = ('' + Math.random()).substring(2, 8);
 
   this.OTPToken = crypto

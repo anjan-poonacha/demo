@@ -7,6 +7,6 @@ export const sendEmail = async (data: object) =>
       process.env.NOTIFY_HOST +
       ':' +
       process.env.NOTIFY_PORT +
-      '/notify/api/v1/email',
+      '/notify/api/v1/email/simple',
     data,
   });
