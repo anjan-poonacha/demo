@@ -20,7 +20,7 @@ export const signToken = (
   facilityArea: string,
   facilityName: string,
   facilityId: string,
-  lastLoggedAt: string,
+  isFirstLogin: string,
 ) => {
   return jwt.sign(
     {
@@ -32,7 +32,7 @@ export const signToken = (
       facilityType,
       facilityName,
       facilityId,
-      lastLoggedAt,
+      isFirstLogin,
     },
     (process.env as { JWT_SECRET: string }).JWT_SECRET,
     {
@@ -61,7 +61,7 @@ export const createSendToken = async (
     user.facilityArea,
     user.facilityName,
     user.facilityId,
-    user.lastLoggedAt as string,
+    user.isFirstLogin as string,
   );
 
   await saveLastlogin(user);
@@ -271,6 +271,7 @@ export const resetPassword = catchAsync(async (req: Request, res, next) => {
   user.passwordConfirm = req.body.passwordConfirm;
   user.OTPToken = undefined;
   user.OTPExpiresAt = undefined;
+  user.isFirstLogin = false;
   await user.save();
   createSendToken(user, 200, res);
 });

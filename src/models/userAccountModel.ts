@@ -34,6 +34,7 @@ export interface IUserAccount extends Document {
   OTPExpiresAt: Date | undefined;
   OTPToken: string | undefined;
   lastLoggedAt: Date | string;
+  isFirstLogin: boolean | string;
   correctPassword: Function;
   createPasswordResetToken: () => string;
   passwordChangedAfter: (JWTTimeStamp: number) => boolean;
@@ -273,6 +274,10 @@ const userAccountSchema = new mongoose.Schema({
   OTPExpiresAt: Date,
   OTPToken: String,
   lastLoggedAt: Date,
+  isFirstLogin: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 userAccountSchema.pre<IUserAccount>('save', function(next) {
