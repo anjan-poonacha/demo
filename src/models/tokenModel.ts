@@ -15,41 +15,33 @@ const tokenSchema = new mongoose.Schema<IToken>({
 
 const Token = mongoose.model<IToken>('Token', tokenSchema);
 
-// (() => {
-//   setInterval(async () => {
-//     try {
-//       await Token.deleteMany({ createdAt: { $lt: new Date(Date.now()) } });
-//       console.log(await Token.find());
-//       await Token.create({ name: 'nidaToken' });
-//       console.log(await Token.find());
-//       const result = await axios({
-//         method: 'post',
-//         url:
-//           'https://onlineauthentication.nida.gov.rw/onlineauthentication/claimtoken',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
+(() => {
+  setInterval(async () => {
+    try {
+      const result = await axios({
+        method: 'post',
+        url: 'https://uat.nida.gov.rw:8081/onlineauthentication/claimtoken',
+        headers: {
+          'Content-Type': 'application/json',
+        },
 
-//         data: {
-//           username: 'CRVS-QT',
-//           password:
-//             'hLA_fg2FRRyWeK37DY!VH-7uZ6OUigrzBDu@1oKWv?fW3fd!_rc-RgiiUgppJixKz-uSq8gpopzK!kGU3UW7erYvumsU-unnRMw41BUfj31CYQpJQMC4DFFir-xeRCq!',
-//         },
-//       });
-//       console.log(result);
+        data: {
+          username: 'CRVS_QT',
+          password:
+            'QPmACn65LumRfxhaP6$ft9ccRV5tJ0stKLuBv0_4tsj1KL2iQ!fkJncWMiZYxNx0b8hLcXW58i3a0sKg8WUPVh1xJO5marGW@z0RDrg9orsAzb$uQT5R9Yf9h1bE7L4S',
+        },
+      });
+      const token = (result.data as string).split(' ')[1];
+      await Token.deleteMany({ createdAt: { $lt: new Date() } });
+      const updatedToken = await Token.create({ name: 'nidaToken', token });
 
-//       const { token } = result.data;
-//       const tok = await Token.findOne({ name: 'nidaToken' });
-//       if (!tok) {
-//         throw new Error("Token not found or couldn't be created");
-//       }
-//       tok.token = token as string;
-//       const updatedToken = await tok.save();
-//       console.log(updatedToken.token);
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   }, 1 * 10 * 1000);
-// })();
+      if (!updatedToken) {
+        throw new Error("Token not found or couldn't be created");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, 1 * 10 * 1000);
+})();
 
 export default Token;

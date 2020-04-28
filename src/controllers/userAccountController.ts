@@ -5,6 +5,7 @@ import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
 import UserAccount from '../models/userAccountModel';
 import { createSendToken } from '../utils/authenticate';
+import Token from '../models/tokenModel';
 
 export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -145,6 +146,15 @@ const TOKEN =
 
 export const getCitizen: RequestHandler = async (req, res, next) => {
   try {
+    const token = await Token.findOne();
+    if (!token) {
+      return next(
+        new AppError(
+          'Something went wrong, Token Not Found, Please try again later',
+          404,
+        ),
+      );
+    }
     const { nid } = req.query as { nid: string };
     if (!nid) {
       throw new Error(
@@ -163,7 +173,7 @@ export const getCitizen: RequestHandler = async (req, res, next) => {
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: `Bearer ${TOKEN}`,
+            Authorization: `Bearer ${token.token}`,
           },
         },
       )
@@ -174,6 +184,7 @@ export const getCitizen: RequestHandler = async (req, res, next) => {
       .catch((err: AxiosError) => {
         console.log('Error : ' + err);
         console.log('Error : ' + err.toJSON());
+        res.status(400).send(err);
       });
   } catch (error) {
     console.log({ error });
