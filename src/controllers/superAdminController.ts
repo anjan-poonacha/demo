@@ -40,7 +40,6 @@ export const createSuperAdmin = catchAsync(async (req: Request, res, next) => {
   const reqBody = { ...req.body };
   reqBody.createdBy = req.user._id;
   reqBody.createdAt = Date.now();
-  console.log(req);
 
   const newUser = await SuperAdmin.create(reqBody);
 

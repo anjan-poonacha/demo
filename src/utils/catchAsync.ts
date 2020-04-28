@@ -18,7 +18,7 @@ declare module 'express' {
   }
 }
 
-export default (fn: RequestHandler) => {
+export default (fn: RequestHandler | Function) => {
   return (req: Request, res: Response, next: NextFunction) => {
     fn(req, res, next).catch(next);
   };

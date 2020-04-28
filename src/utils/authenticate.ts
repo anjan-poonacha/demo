@@ -41,7 +41,13 @@ export const signToken = (
   );
 };
 
-export const createSendToken = (
+const saveLastlogin = async (user: IUserAccount) => {
+  user.lastLoggedAt = new Date();
+
+  await user.save({ validateBeforeSave: false });
+};
+
+export const createSendToken = async (
   user: IUserAccount,
   statusCode: number,
   res: Response,
@@ -55,8 +61,10 @@ export const createSendToken = (
     user.facilityArea,
     user.facilityName,
     user.facilityId,
-    user.lastLoggedAt.toString(),
+    user.lastLoggedAt as string,
   );
+
+  await saveLastlogin(user);
 
   // REMOVE THE PASSWORD FROM THE OUTPUT
   user.password = undefined;

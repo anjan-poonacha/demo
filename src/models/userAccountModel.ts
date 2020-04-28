@@ -33,7 +33,7 @@ export interface IUserAccount extends Document {
   passwordChangedAt: Date;
   OTPExpiresAt: Date | undefined;
   OTPToken: string | undefined;
-  lastLoggedAt: Date;
+  lastLoggedAt: Date | string;
   correctPassword: Function;
   createPasswordResetToken: () => string;
   passwordChangedAfter: (JWTTimeStamp: number) => boolean;

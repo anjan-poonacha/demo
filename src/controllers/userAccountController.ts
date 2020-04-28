@@ -26,8 +26,7 @@ export const login = catchAsync(async (req, res, next) => {
 
   // 3) If everything is OK, send token to client
   createSendToken(user, 200, res);
-  user.lastLoggedAt = new Date();
-  await user.save({ validateBeforeSave: false });
+  
 });
 
 export const disableUserAccount = catchAsync(

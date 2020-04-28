@@ -10,7 +10,7 @@ export interface ISuperAdmin extends Document {
   password: string;
   passwordConfirm?: string;
   passwordChanged: Date;
-  lastLoggedAt: Date;
+  lastLoggedAt: Date | string;
   correctPassword: (
     inputPassword: string,
     expectedPassword: string,
