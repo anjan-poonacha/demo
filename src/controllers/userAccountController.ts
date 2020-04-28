@@ -26,6 +26,8 @@ export const login = catchAsync(async (req, res, next) => {
 
   // 3) If everything is OK, send token to client
   createSendToken(user, 200, res);
+  user.lastLoggedAt = new Date();
+  await user.save({ validateBeforeSave: false });
 });
 
 export const disableUserAccount = catchAsync(
@@ -138,9 +140,6 @@ export const statusCheck: RequestHandler = (req, res, next) => {
     status: 'ACTIVE',
   });
 };
-
-const TOKEN =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFYnBJZCI6IjI4IiwiRWJwTmFtZSI6IkNSVlNfUVQiLCJPdGsiOiJtU0tSQWxDTVNIakNkVEdZeHNQVWhLY213UWlXMldhdUJPZjArM052aDhDditUSVZSYjUxdUdSVTFDbHdOZTVYYldJTmhWcFhnU1N3WWlxT3h3ZXQzUT09IiwianRpIjoiMjhhZTZjYzMtNGVjMC00OGJlLTlkMmEtYjEzZDQ1NzgyNmFlIiwibmJmIjoxNTgyNzgxMTQwLCJleHAiOjE1ODI3OTU1NDAsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDI4Ni8iLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjQyODYvIn0.IgDl3Wml2Z5rJ10Oxm3GWYEt8DYkmR0v7uKYnZ72ryY';
 
 // TODO Request the token from the Database and update the token
 

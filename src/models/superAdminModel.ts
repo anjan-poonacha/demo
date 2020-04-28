@@ -10,6 +10,7 @@ export interface ISuperAdmin extends Document {
   password: string;
   passwordConfirm?: string;
   passwordChanged: Date;
+  lastLoggedAt: Date;
   correctPassword: (
     inputPassword: string,
     expectedPassword: string,
@@ -77,6 +78,7 @@ const superAdminSchema = new mongoose.Schema<ISuperAdmin>({
   createdBy: Schema.Types.ObjectId,
   createdAt: Date,
   passwordChanged: Date,
+  lastLoggedAt: Date,
 });
 
 superAdminSchema.pre<ISuperAdmin>('save', async function(next) {

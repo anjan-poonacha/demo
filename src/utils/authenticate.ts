@@ -20,6 +20,7 @@ export const signToken = (
   facilityArea: string,
   facilityName: string,
   facilityId: string,
+  lastLoggedAt: string,
 ) => {
   return jwt.sign(
     {
@@ -31,6 +32,7 @@ export const signToken = (
       facilityType,
       facilityName,
       facilityId,
+      lastLoggedAt,
     },
     (process.env as { JWT_SECRET: string }).JWT_SECRET,
     {
@@ -53,6 +55,7 @@ export const createSendToken = (
     user.facilityArea,
     user.facilityName,
     user.facilityId,
+    user.lastLoggedAt.toString(),
   );
 
   // REMOVE THE PASSWORD FROM THE OUTPUT

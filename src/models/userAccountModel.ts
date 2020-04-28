@@ -33,6 +33,7 @@ export interface IUserAccount extends Document {
   passwordChangedAt: Date;
   OTPExpiresAt: Date | undefined;
   OTPToken: string | undefined;
+  lastLoggedAt: Date;
   correctPassword: Function;
   createPasswordResetToken: () => string;
   passwordChangedAfter: (JWTTimeStamp: number) => boolean;
@@ -77,13 +78,13 @@ const userAccountSchema = new mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, 'Provide a valid email'],
   },
-  IDType: {
+  idType: {
     type: String,
-    // required: [true, 'Provide the ID type']
+    // required: [true, 'Provide the id type']
   },
-  IDNumber: {
+  idNumber: {
     type: String,
-    // required: [true, 'Provide the ID number']
+    // required: [true, 'Provide the id number']
   },
   role: {
     type: String,
@@ -144,7 +145,7 @@ const userAccountSchema = new mongoose.Schema({
     type: String,
     // required: [true, 'Provide the nationality']
   },
-  dob: {
+  dateOfBirth: {
     type: Date,
     // required: [true, 'Give DOB in yyyy-mm-dd format']
   },
@@ -271,6 +272,7 @@ const userAccountSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   OTPExpiresAt: Date,
   OTPToken: String,
+  lastLoggedAt: Date,
 });
 
 userAccountSchema.pre<IUserAccount>('save', function(next) {
