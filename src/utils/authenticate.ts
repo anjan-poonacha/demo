@@ -195,6 +195,7 @@ export const updatePassword = catchAsync(async (req: Request, res, next) => {
 
   user.password = newPassword;
   user.passwordConfirm = passwordConfirm;
+  user.isFirstLogin = false;
 
   const userNewPassword = await user.save();
   res.status(200).json({
