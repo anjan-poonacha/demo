@@ -6,9 +6,9 @@ import SuperAdmin, { ISuperAdmin } from '../models/superAdminModel';
 import { IUserAccount } from '../models/userAccountModel';
 import AppError from '../utils/appError';
 
-const signToken = (id: string, role: string) => {
+const signToken = (id: string, role: string, email: string) => {
   return jwt.sign(
-    { id, role },
+    { id, role, email },
     (process.env as { JWT_SECRET: string }).JWT_SECRET,
     {
       expiresIn: process.env.JWT_EXPIRES_IN,
@@ -21,7 +21,7 @@ const createSendToken = (
   statusCode: number,
   res: Response,
 ) => {
-  const token = signToken(user._id, user.role);
+  const token = signToken(user._id, user.role, user.email);
 
   // REMOVE THE PASSWORD FROM THE OUTPUT
   user.password = undefined;

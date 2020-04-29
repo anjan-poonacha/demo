@@ -6,6 +6,7 @@ import { Role } from '../utils/enums';
 
 export interface ISuperAdmin extends Document {
   status: string;
+  email: string;
   role: string;
   password: string;
   passwordConfirm?: string;
