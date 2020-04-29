@@ -184,7 +184,6 @@ export const updatePassword = catchAsync(async (req: Request, res, next) => {
   }
   const { email, currentPassword, newPassword, passwordConfirm } = req.body;
   const user = await UserAccount.findOne({ email }).select('+password');
-  console.log(user!.password);
   if (!user) {
     return next(
       new AppError("Couldn't find the user with email " + email, 404),
