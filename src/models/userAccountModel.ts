@@ -68,6 +68,7 @@ const userAccountSchema = new mongoose.Schema({
     },
     default: Status.ACTIVE,
   },
+  createdAt: { type: Date, default: Date.now },
   // isActive: {
   //   type: Boolean,
   //   default: true,

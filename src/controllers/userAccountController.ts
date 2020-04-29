@@ -26,7 +26,6 @@ export const login = catchAsync(async (req, res, next) => {
 
   // 3) If everything is OK, send token to client
   createSendToken(user, 200, res);
-  
 });
 
 export const disableUserAccount = catchAsync(
