@@ -5,6 +5,7 @@ import * as authController from '../utils/authenticate';
 
 const router = express.Router();
 
+router.get('/', userController.getUsers);
 router.get('/id/:id', userController.getUserById);
 
 router.get('/me', authController.protect, userController.getMe);

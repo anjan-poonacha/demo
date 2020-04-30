@@ -86,6 +86,7 @@ const userAccountSchema = new mongoose.Schema({
   },
   idNumber: {
     type: String,
+    trim:true
     // required: [true, 'Provide the id number']
   },
   role: {

@@ -208,3 +208,13 @@ export const getUserById = catchAsync(async (req: Request, res, next) => {
     },
   });
 });
+export const getUsers = catchAsync(async (req: Request, res, next) => {
+  const user = await UserAccount.find();
+  res.status(200).json({
+    usersCount: user.length,
+    status: 'SUCCESS',
+    data: {
+      user,
+    },
+  });
+});
