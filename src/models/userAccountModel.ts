@@ -86,7 +86,7 @@ const userAccountSchema = new mongoose.Schema({
   },
   idNumber: {
     type: String,
-    trim:true
+    trim: true,
     // required: [true, 'Provide the id number']
   },
   role: {
@@ -326,6 +326,7 @@ userAccountSchema.pre<IUserAccount>('save', function(next) {
 
 userAccountSchema.methods.createPasswordResetToken = function() {
   const OTP = ('' + Math.random()).substring(2, 8);
+  console.log(OTP);
 
   this.OTPToken = crypto
     .createHash('sha256')

@@ -256,12 +256,14 @@ export const forgotPassword = catchAsync(async (req: Request, res, next) => {
 });
 
 export const resetPassword = catchAsync(async (req: Request, res, next) => {
+  const { email } = req.body;
   const hashedToken = crypto
     .createHash('sha256')
     .update(req.body.otp)
     .digest('hex');
 
   const user = await UserAccount.findOne({
+    email,
     OTPToken: hashedToken,
     OTPExpiresAt: { $gt: new Date(Date.now()) },
   });
