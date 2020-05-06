@@ -25,4 +25,5 @@ pids
 *.seed
 *.pid.lock
 **/*.map
+package-lock.json
 
