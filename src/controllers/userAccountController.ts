@@ -175,7 +175,6 @@ export const getCitizen: RequestHandler = async (req, res, next) => {
         },
       )
       .then((result: { data: any }) => {
-        console.log({ data: result.data });
         res.status(200).json({ data: result.data });
       })
       .catch((err: AxiosError) => {
