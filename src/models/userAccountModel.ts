@@ -93,8 +93,8 @@ const userAccountSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Specify the role applying for.'],
     enum: {
-      values: [Role.MA, Role.CR, Role.CRO, Role.NOTIFIER],
-      message: `Options for ( ${Role.MA} | ${Role.CR} | ${Role.CRO} | ${Role.NOTIFIER} )`,
+      values: [Role.MA, Role.CR, Role.CRO, Role.NOTIFIER, Role.LAUNCHER],
+      message: `Options for ( ${Role.MA} | ${Role.CR} | ${Role.CRO} | ${Role.NOTIFIER} | ${Role.LAUNCHER} )`,
     },
   },
   occupiedPositon: {
