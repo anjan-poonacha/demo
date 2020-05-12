@@ -10,6 +10,7 @@ export enum Role {
   CR = 'cr',
   CRO = 'cro',
   NOTIFIER = 'notifier',
+  LAUNCHER = 'launcher',
 }
 
 export enum Ministry {
