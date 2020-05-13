@@ -41,8 +41,6 @@ router.patch(
   userController.disableUserAccount,
 );
 
-router.get('/nid/getCitizen', userController.getCitizen);
-
 router.get('/email/:email', userController.getUserAccount);
 
 export default router;

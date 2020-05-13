@@ -5,7 +5,6 @@ import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
 import UserAccount from '../models/userAccountModel';
 import { createSendToken } from '../utils/authenticate';
-import Token from '../models/tokenModel';
 
 export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -137,55 +136,6 @@ export const statusCheck: RequestHandler = (req, res, next) => {
   res.status(200).json({
     status: 'ACTIVE',
   });
-};
-
-// TODO Request the token from the Database and update the token
-
-export const getCitizen: RequestHandler = async (req, res, next) => {
-  try {
-    const token = await Token.findOne();
-    if (!token) {
-      return next(
-        new AppError(
-          'Something went wrong, Token Not Found, Please try again later',
-          404,
-        ),
-      );
-    }
-    const { nid } = req.query as { nid: string };
-    if (!nid) {
-      throw new Error(
-        'No NID found in the request. Please pass a valid NID in the url params!',
-      );
-    }
-    axios
-      .post(
-        'https://uat.nida.gov.rw:8081/onlineauthentication/getcitizen',
-        {
-          documentNumber: nid,
-          keyPhrase:
-            'A-ABJ0yPnq8vyiH!m-yPTV-ELHi?kx31FmDcnvwMzP$19LK@4@$@2!$W-@6bSBE5Ch5nVEX6U2peZpL-_niqA8-LpXdsEv!_kgy2VwqApgs-W7?1A7cEspFKiv?_BFBy',
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization: `Bearer ${token.token}`,
-          },
-        },
-      )
-      .then((result: { data: any }) => {
-        res.status(200).json({ data: result.data });
-      })
-      .catch((err: AxiosError) => {
-        console.log('Error : ' + err);
-        console.log('Error : ' + err.toJSON());
-        res.status(400).send(err);
-      });
-  } catch (error) {
-    console.log({ error });
-    next(error);
-  }
 };
 
 export const getMe = catchAsync(async (req: Request, res, next) => {
