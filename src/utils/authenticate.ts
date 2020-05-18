@@ -246,10 +246,11 @@ export const forgotPassword = catchAsync(async (req: Request, res, next) => {
     user.OTPToken = undefined;
     user.OTPExpiresAt = undefined;
     await user.save({ validateBeforeSave: false });
+    console.log(err);
     return next(
       new AppError(
         'There was error trying to send an email. Try again later!',
-        500,
+        400,
       ),
     );
   }
