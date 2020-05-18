@@ -149,7 +149,9 @@ export const getMe = catchAsync(async (req: Request, res, next) => {
 
 export const getUserById = catchAsync(async (req: Request, res, next) => {
   const _id = req.params.id;
-  const user = await UserAccount.findOne({ _id });
+  const user = await UserAccount.findOne({ _id }).select(
+    'email status idNumber facilityType facilityId facilityName role idType',
+  );
   res.status(200).json({
     status: 'SUCCESS',
     data: {
@@ -158,7 +160,9 @@ export const getUserById = catchAsync(async (req: Request, res, next) => {
   });
 });
 export const getUsers = catchAsync(async (req: Request, res, next) => {
-  const user = await UserAccount.find();
+  const user = await UserAccount.find().select(
+    'email status idNumber facilityType facilityId facilityName role idType',
+  );
   res.status(200).json({
     usersCount: user.length,
     status: 'SUCCESS',

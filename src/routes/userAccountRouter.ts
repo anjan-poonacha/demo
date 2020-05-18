@@ -3,11 +3,22 @@ import express from 'express';
 import * as userController from '../controllers/userAccountController';
 import * as authController from '../utils/authenticate';
 import { resetPasswordForce } from '../utils/resetPassword';
+import { Role } from '../utils/enums';
 
 const router = express.Router();
 
-router.get('/', userController.getUsers);
-router.get('/id/:id', userController.getUserById);
+router.get(
+  '/',
+  authController.protect,
+  authController.restrictTo(Role.SA, Role.MA),
+  userController.getUsers,
+);
+router.get(
+  '/id/:id',
+  authController.protect,
+  authController.restrictTo(Role.SA, Role.MA),
+  userController.getUserById,
+);
 
 router.get('/me', authController.protect, userController.getMe);
 
