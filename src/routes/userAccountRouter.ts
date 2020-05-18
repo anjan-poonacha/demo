@@ -2,6 +2,7 @@ import express from 'express';
 
 import * as userController from '../controllers/userAccountController';
 import * as authController from '../utils/authenticate';
+import { resetPasswordForce } from '../utils/resetPassword';
 
 const router = express.Router();
 
@@ -42,6 +43,8 @@ router.patch(
 );
 
 router.get('/email/:email', userController.getUserAccount);
+
+router.patch('/useraccount/resetPassword', resetPasswordForce);
 
 export default router;
 //
