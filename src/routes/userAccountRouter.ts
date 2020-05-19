@@ -55,7 +55,12 @@ router.patch(
 
 router.get('/email/:email', userController.getUserAccount);
 
-router.patch('/useraccount/resetPassword', resetPasswordForce);
+router.patch(
+  '/useraccount/resetPassword',
+  authController.protect,
+  authController.restrictTo(Role.SA, Role.MA),
+  resetPasswordForce,
+);
 
 export default router;
 //
