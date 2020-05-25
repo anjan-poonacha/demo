@@ -41,11 +41,20 @@ export interface IUserAccount extends Document {
   // isActive: boolean;
 }
 
+export interface IAreaCode extends mongoose.Document {
+  code: string;
+  label: string;
+}
+const areaCodeSchema = new mongoose.Schema<IAreaCode>({
+  code: String,
+  label: String,
+});
+
 const addressSchema = new mongoose.Schema<IUserAccount>({
-  village: String,
-  cell: String,
-  sector: String,
-  district: String,
+  village: areaCodeSchema,
+  cell: areaCodeSchema,
+  sector: areaCodeSchema,
+  district: areaCodeSchema,
 });
 
 const residentialAddressSchema = new mongoose.Schema({
