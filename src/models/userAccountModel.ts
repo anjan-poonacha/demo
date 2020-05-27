@@ -39,6 +39,8 @@ export interface IUserAccount extends Document {
   createPasswordResetToken: () => string;
   passwordChangedAfter: (JWTTimeStamp: number) => boolean;
   // isActive: boolean;
+  surname:string;
+  postNames:string
 }
 
 export interface IAreaCode extends mongoose.Document {

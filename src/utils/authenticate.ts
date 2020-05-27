@@ -22,6 +22,8 @@ export const signToken = (
   facilityId: string,
   isFirstLogin: string,
   email: string,
+  surname: string,
+  postNames: string,
 ) => {
   return jwt.sign(
     {
@@ -35,6 +37,8 @@ export const signToken = (
       facilityId,
       isFirstLogin,
       email,
+      surname,
+      postNames,
     },
     (process.env as { JWT_SECRET: string }).JWT_SECRET,
     {
@@ -65,6 +69,8 @@ export const createSendToken = async (
     user.facilityId,
     user.isFirstLogin as string,
     user.email,
+    user.surname,
+    user.postNames,
   );
 
   await saveLastlogin(user);
