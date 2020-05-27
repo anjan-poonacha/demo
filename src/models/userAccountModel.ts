@@ -27,7 +27,11 @@ export interface IUserAccount extends Document {
   transferredAt: number;
   deactivatedBy: string;
   deactivatedAt: number;
-  status: string;
+  status:
+    | Status.ACTIVE
+    | Status.DEACTIVATED
+    | Status.INACTIVE
+    | Status.DISABLED;
   facilityName: string;
   facilityId: string;
   passwordChangedAt: Date;
@@ -39,8 +43,8 @@ export interface IUserAccount extends Document {
   createPasswordResetToken: () => string;
   passwordChangedAfter: (JWTTimeStamp: number) => boolean;
   // isActive: boolean;
-  surname:string;
-  postNames:string
+  surname: string;
+  postNames: string;
 }
 
 export interface IAreaCode extends mongoose.Document {
@@ -74,8 +78,13 @@ const userAccountSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: {
-      values: [Status.ACTIVE, Status.INACTIVE, Status.DEACTIVATED],
-      message: `Status can only be ( ${Status.ACTIVE} | ${Status.DEACTIVATED} | ${Status.INACTIVE} )`,
+      values: [
+        Status.ACTIVE,
+        Status.INACTIVE,
+        Status.DEACTIVATED,
+        Status.DISABLED,
+      ],
+      message: `Status can only be ( ${Status.ACTIVE} | ${Status.DEACTIVATED} | ${Status.INACTIVE} | ${Status.DISABLED} )`,
     },
     default: Status.ACTIVE,
   },
@@ -291,6 +300,8 @@ const userAccountSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  disabledAt: Date,
+  disabledBy: mongoose.Schema.Types.ObjectId,
 });
 
 userAccountSchema.pre<IUserAccount>('save', function(next) {

@@ -5,6 +5,7 @@ import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
 import UserAccount from '../models/userAccountModel';
 import { createSendToken } from '../utils/authenticate';
+import { Status } from '../utils/enums';
 
 export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -16,7 +17,7 @@ export const login = catchAsync(async (req, res, next) => {
   // 2) Check if user exists && password is correct
   const user = await UserAccount.findOne({
     email,
-    status: { $eq: 'active' },
+    status: { $eq: Status.ACTIVE },
   }).select('+password');
 
   if (!user || !(await user.correctPassword(password, user.password))) {
@@ -46,7 +47,43 @@ export const disableUserAccount = catchAsync(
       );
     }
 
-    userAccount.status = 'deactivated';
+    userAccount.status = Status.DISABLED;
+
+    userAccount.deactivatedAt = Date.now();
+
+    userAccount.deactivatedBy = req.user._id;
+
+    const updatedUserAccount = await userAccount.save({
+      validateBeforeSave: false,
+    });
+
+    res.status(200).json({
+      status: 'SUCCESS',
+      userAccount: updatedUserAccount,
+    });
+  },
+);
+
+export const deactivateUserAccount = catchAsync(
+  async (req: Request, res, next) => {
+    if (!req.user) {
+      return next(new AppError('Something went wrong, Not Authorized', 401));
+    }
+
+    const { application } = req.body;
+
+    const userAccount = await UserAccount.findById(application.userId);
+
+    if (!userAccount) {
+      return next(
+        new AppError(
+          `Couldn\'t find the user with id ${application.userId}`,
+          400,
+        ),
+      );
+    }
+
+    userAccount.status = Status.DEACTIVATED;
 
     userAccount.deactivatedAt = Date.now();
 
@@ -122,7 +159,10 @@ export const createUserAccount = catchAsync(async (req: Request, res, next) => {
 export const getUserAccount = catchAsync(async (req, res, next) => {
   const { email } = req.params;
 
-  const user = await UserAccount.findOne({ email, status: { $eq: 'active' } });
+  const user = await UserAccount.findOne({
+    email,
+    status: { $eq: Status.ACTIVE },
+  });
 
   const exist = user ? true : false;
 
@@ -149,9 +189,7 @@ export const getMe = catchAsync(async (req: Request, res, next) => {
 
 export const getUserById = catchAsync(async (req: Request, res, next) => {
   const _id = req.params.id;
-  const user = await UserAccount.findOne({ _id }).select(
-    'email status idNumber facilityType facilityId facilityName role idType',
-  );
+  const user = await UserAccount.findOne({ _id }).select('-password -__v');
   res.status(200).json({
     status: 'SUCCESS',
     data: {
@@ -160,9 +198,7 @@ export const getUserById = catchAsync(async (req: Request, res, next) => {
   });
 });
 export const getUsers = catchAsync(async (req: Request, res, next) => {
-  const user = await UserAccount.find().select(
-    'email status idNumber facilityType facilityId facilityName role idType',
-  );
+  const user = await UserAccount.find().select('-password -__v');
   res.status(200).json({
     usersCount: user.length,
     status: 'SUCCESS',

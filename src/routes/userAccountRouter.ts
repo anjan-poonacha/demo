@@ -19,6 +19,8 @@ router.get(
   authController.restrictTo(Role.SA, Role.MA),
   userController.getUserById,
 );
+// Internal working
+router.get('/userId/:id', userController.getUserById);
 
 router.get('/me', authController.protect, userController.getMe);
 
@@ -51,6 +53,11 @@ router.patch(
   '/useraccount/disable',
   authController.protect,
   userController.disableUserAccount,
+);
+router.patch(
+  '/useraccount/deactivate',
+  authController.protect,
+  userController.deactivateUserAccount,
 );
 
 router.get('/email/:email', userController.getUserAccount);

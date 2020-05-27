@@ -35,6 +35,7 @@ export enum Status {
   ACTIVE = 'active',
   DEACTIVATED = 'deactivated',
   INACTIVE = 'inactive',
+  DISABLED = 'disabled',
 }
 
 export enum MaritalStatus {
