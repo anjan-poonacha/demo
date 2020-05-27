@@ -6,6 +6,7 @@ import AppError from '../utils/appError';
 import UserAccount from '../models/userAccountModel';
 import { createSendToken } from '../utils/authenticate';
 import { Status } from '../utils/enums';
+import APIFeatures from '../utils/APIFeatures';
 
 export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -198,10 +199,18 @@ export const getUserById = catchAsync(async (req: Request, res, next) => {
   });
 });
 export const getUsers = catchAsync(async (req: Request, res, next) => {
-  const user = await UserAccount.find().select('-password -__v');
+  const query = UserAccount.find().select('-password -__v');
+  let features = new APIFeatures(query, req.query as any).filter();
+  const count = await (await features.query).length;
+  features = features
+    .limitFields()
+    .paginate()
+    .sort();
+  const user = await features.query;
+
   res.status(200).json({
-    usersCount: user.length,
     status: 'SUCCESS',
+    count,
     data: {
       user,
     },
