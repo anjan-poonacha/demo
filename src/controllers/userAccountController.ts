@@ -133,14 +133,11 @@ export const updateUserAccount = catchAsync(async (req: Request, res, next) => {
 
   const { application } = req.body;
 
-  const userAccount = await UserAccount.findById(application.createdBy);
+  const userAccount = await UserAccount.findById(application.userId);
 
   if (!userAccount) {
     return next(
-      new AppError(
-        `Couldn't find the user with id ${application.createdBy}`,
-        400,
-      ),
+      new AppError(`Couldn't find the user with id ${application.userId}`, 400),
     );
   }
 
