@@ -12,6 +12,7 @@ import {
   Status,
 } from '../utils/enums';
 import AppError from '../utils/appError';
+import { sendEmail } from '../utils/email';
 
 export interface IUserAccount extends Document {
   email: string;
@@ -27,6 +28,8 @@ export interface IUserAccount extends Document {
   transferredAt: number;
   deactivatedBy: string;
   deactivatedAt: number;
+  reactivatedBy: any;
+  reactivatedAt: Date;
   status:
     | Status.ACTIVE
     | Status.DEACTIVATED
@@ -302,6 +305,8 @@ const userAccountSchema = new mongoose.Schema({
   },
   disabledAt: Date,
   disabledBy: mongoose.Schema.Types.ObjectId,
+  activatedAt: Date,
+  activatedBy: mongoose.Schema.Types.ObjectId,
 });
 
 userAccountSchema.pre<IUserAccount>('save', function(next) {
@@ -379,6 +384,49 @@ userAccountSchema.methods.correctPassword = async function(
   //  candidatePassword -> to be verified
   return await bcrypt.compare(candidatePassword, userPassword);
 };
+
+userAccountSchema.pre<IUserAccount>('save', async function(next) {
+  if (this.isNew || !this.isModified('status')) {
+    return next();
+  }
+  let data: {
+    email: string;
+    message: string;
+    subject: string;
+    user: { email: string };
+    secret: string;
+    [index: string]: any;
+  } = {
+    secret: process.env.EMAIL_SECRETKEY as string,
+    email: this.email,
+    user: {
+      email: this.email,
+    },
+    info: {
+      id: this._id,
+      status: this.status,
+    },
+    subject: '',
+    message: '',
+  };
+  if (this.status === Status.ACTIVE) {
+    data.subject = 'Your account is activated.';
+    data.message = `Welcome back.
+    Your account has been activated.`;
+  }
+
+  if (this.status === Status.DEACTIVATED) {
+    data.subject = 'Your account is deactivated.';
+    data.message = `Your account has been deactivated.
+    Contact admin to reactivate the account`;
+  }
+  if (!data.user.email || !data.secret || !data.subject) {
+    return next();
+  }
+  await sendEmail(data);
+
+  next();
+});
 
 const UserAccount: Model<IUserAccount> = mongoose.model<IUserAccount>(
   'UserAccount',

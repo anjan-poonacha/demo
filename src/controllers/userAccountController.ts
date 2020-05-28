@@ -65,6 +65,32 @@ export const disableUserAccount = catchAsync(
   },
 );
 
+export const reactivateUserAccount = catchAsync(
+  async (req: Request, res, next) => {
+    if (!req.user) {
+      return next(new AppError('Something went wrong, Not Authorized', 401));
+    }
+    const { userId } = req.body;
+    const userAccount = await UserAccount.findById(userId);
+
+    if (!userAccount) {
+      return next(
+        new AppError(`Couldn\'t find the user with id ${userId}`, 400),
+      );
+    }
+    if (userAccount.status === Status.ACTIVE)
+      return next(new AppError('Account is already active', 400));
+
+    userAccount.status = Status.ACTIVE;
+    userAccount.reactivatedBy = req.user;
+    userAccount.reactivatedAt = new Date();
+
+    const updatedAccount = userAccount.save({ validateBeforeSave: false });
+    console.log();
+    res.status(200).json({ status: 'SUCCESS' });
+  },
+);
+
 export const deactivateUserAccount = catchAsync(
   async (req: Request, res, next) => {
     if (!req.user) {

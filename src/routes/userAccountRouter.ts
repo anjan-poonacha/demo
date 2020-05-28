@@ -60,6 +60,13 @@ router.patch(
   userController.deactivateUserAccount,
 );
 
+router.patch(
+  '/useraccount/activate',
+  authController.protect,
+  authController.restrictTo(Role.SA, Role.MA),
+  userController.reactivateUserAccount,
+);
+
 router.get('/email/:email', userController.getUserAccount);
 
 router.patch(
