@@ -24,7 +24,7 @@ export interface IUserAccount extends Document {
   passwordConfirm: string | undefined;
   facilityArea: string;
   firstName: string;
-  transferredBy: string;
+  transferredBy: any;
   transferredAt: number;
   deactivatedBy: string;
   deactivatedAt: number;
@@ -279,9 +279,7 @@ const userAccountSchema = new mongoose.Schema({
   transferredAt: {
     type: Date,
   },
-  transferredBy: {
-    type: mongoose.Schema.Types.ObjectId,
-  },
+  transferredBy: JSON,
   deactivatedAt: {
     type: Date,
   },

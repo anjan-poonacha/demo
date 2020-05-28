@@ -147,7 +147,7 @@ export const updateUserAccount = catchAsync(async (req: Request, res, next) => {
   userAccount.role = application.appliedFacility.role;
   userAccount.facilityType = application.appliedFacility.facilityType;
 
-  userAccount.transferredBy = req.user._id;
+  userAccount.transferredBy = req.user;
   userAccount.transferredAt = Date.now();
 
   const updatedUserAccount = await userAccount.save({
