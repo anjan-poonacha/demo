@@ -37,7 +37,7 @@ export default class APIFeatures<T extends IUserAccount | ISuperAdmin> {
       this.query = this.query.sort(sortBy);
       // console.log(sortBy);
     } else {
-      this.query.sort('-lastModifiedAt -modifiedAt -createdAt');
+      this.query.sort('-modifiedAt -modifiedAt -createdAt');
     }
     return this;
   }
