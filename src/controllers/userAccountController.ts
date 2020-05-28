@@ -118,9 +118,11 @@ export const updateUserAccount = catchAsync(async (req: Request, res, next) => {
     );
   }
 
-  userAccount.facilityArea = application.facilityAreaApplied;
-
-  userAccount.facilityType = application.facilityTypeApplied;
+  userAccount.facilityArea = application.appliedFacility.facilityArea;
+  userAccount.facilityId = application.appliedFacility.facilityId;
+  userAccount.facilityName = application.appliedFacility.facilityName;
+  userAccount.role = application.appliedFacility.role;
+  userAccount.facilityType = application.appliedFacility.facilityType;
 
   userAccount.transferredBy = req.user._id;
   userAccount.transferredAt = Date.now();
