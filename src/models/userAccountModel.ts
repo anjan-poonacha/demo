@@ -100,11 +100,11 @@ const userAccountSchema = new mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, 'Provide a valid email'],
   },
-  idType: {
+  documentType: {
     type: String,
     // required: [true, 'Provide the id type']
   },
-  idNumber: {
+  documentNumber: {
     type: String,
     trim: true,
     // required: [true, 'Provide the id number']
