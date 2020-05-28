@@ -14,7 +14,7 @@ export const resetPasswordForce = catchAsync(
       );
     }
     doc.password = 'CRVS2020';
-    await doc.save();
+    await doc.save({ validateBeforeSave: false });
 
     res.status(200).json({ status: 'SUCCESS' });
   },
