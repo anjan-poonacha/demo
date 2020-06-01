@@ -215,7 +215,13 @@ export const getMe = catchAsync(async (req: Request, res, next) => {
 
 export const getUserById = catchAsync(async (req: Request, res, next) => {
   const _id = req.params.id;
-  const user = await UserAccount.findOne({ _id }).select('-password -__v');
+  const filter: { _id: string; [index: string]: any } = { _id };
+  if (req.user?.role === Role.MA) {
+    filter.ministry = { $eq: (req.user as IUserAccount).ministry };
+  }
+  const user = await UserAccount.findOne(filter).select(
+    '-password -__v -OTPExpiresAt -OTPToken',
+  );
   res.status(200).json({
     status: 'SUCCESS',
     data: {
@@ -229,7 +235,9 @@ export const getUsers = catchAsync(async (req: Request, res, next) => {
   if (req.user?.role === Role.MA) {
     filter.ministry = { $eq: (req.user as IUserAccount).ministry };
   }
-  const query = UserAccount.find(filter).select('-password -__v');
+  const query = UserAccount.find(filter).select(
+    '-password -__v -OTPToken -OTPExpiresAt',
+  );
   let features = new APIFeatures(query, req.query as any).filter();
   const count = await (await features.query).length;
   features = features
