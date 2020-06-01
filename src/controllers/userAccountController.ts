@@ -86,8 +86,7 @@ export const reactivateUserAccount = catchAsync(
     userAccount.reactivatedAt = new Date();
 
     const updatedAccount = userAccount.save({ validateBeforeSave: false });
-    console.log();
-    res.status(200).json({ status: 'SUCCESS' });
+    res.status(200).json({ status: 'SUCCESS', updatedAccount });
   },
 );
 
