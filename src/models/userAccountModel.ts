@@ -120,9 +120,9 @@ const userAccountSchema = new mongoose.Schema({
       message: `Options for ( ${Role.MA} | ${Role.CR} | ${Role.CRO} | ${Role.NOTIFIER} | ${Role.LAUNCHER} )`,
     },
   },
-  occupiedPositon: {
+  position: {
     type: String,
-    // required: [true, 'Provide a occupied position']
+    // required: [true, 'Provide a position']
   },
   facilityName: {
     type: String,
@@ -305,6 +305,7 @@ const userAccountSchema = new mongoose.Schema({
   disabledBy: mongoose.Schema.Types.ObjectId,
   activatedAt: Date,
   activatedBy: mongoose.Schema.Types.ObjectId,
+  institutionName: String,
 });
 
 userAccountSchema.pre<IUserAccount>('save', function(next) {
