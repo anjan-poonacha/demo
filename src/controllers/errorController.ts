@@ -7,7 +7,10 @@ interface SendError {
 }
 
 const handleInvalidAuthHeader = () =>
-  new AppError('Provide a proper value for authorization in the header', 400);
+  new AppError(
+    'ERR_HTTP_INVALID_HEADER_VALUE. Invalid authorization header. Not Authorized!!',
+    401,
+  );
 
 const handleJWTError = () =>
   new AppError('Invalid Token. Please login again.', 401);
@@ -78,7 +81,10 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       error = handleValidationErrorDB(error);
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
-    if (error.code === 'ERR_HTTP_INVALID_HEADER_VALUE')
+    if (
+      error.code ===
+      'ERR_HTTP_INVALID_HEADER_VALUE. Invalid authorization header. Not Authorized!!'
+    )
       error = handleInvalidAuthHeader();
     sendErrorProd(error, req, res);
   }
