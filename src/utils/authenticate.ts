@@ -240,7 +240,7 @@ export const forgotPassword = catchAsync(async (req: Request, res, next) => {
 
   try {
     await sendEmail({
-      secret: process.env.EMAIL_SECRETKEY,
+      secret: process.env.SECRET_KEY_EMAIL,
       email: user.email,
       subject: `Your password reset token (Valid for 10 mins)`,
       message,

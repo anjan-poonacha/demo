@@ -396,7 +396,7 @@ userAccountSchema.pre<IUserAccount>('save', async function(next) {
     secret: string;
     [index: string]: any;
   } = {
-    secret: process.env.EMAIL_SECRETKEY as string,
+    secret: process.env.SECRET_KEY_EMAIL as string,
     email: this.email,
     user: {
       email: this.email,
