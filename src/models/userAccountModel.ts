@@ -48,6 +48,7 @@ export interface IUserAccount extends Document {
   // isActive: boolean;
   surname: string;
   postNames: string;
+  nin: string;
 }
 
 export interface IAreaCode extends mongoose.Document {
@@ -306,6 +307,7 @@ const userAccountSchema = new mongoose.Schema({
   activatedAt: Date,
   activatedBy: mongoose.Schema.Types.ObjectId,
   institutionName: String,
+  nin: String,
 });
 
 userAccountSchema.pre<IUserAccount>('save', function(next) {
