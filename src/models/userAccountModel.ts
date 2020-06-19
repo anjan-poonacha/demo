@@ -51,6 +51,15 @@ export interface IUserAccount extends Document {
   nin: string;
 }
 
+export interface IFacility extends Document {
+  label: string;
+  code: string;
+}
+const facilitySchema = new mongoose.Schema<IFacility>({
+  label: String,
+  code: String,
+});
+
 export interface IAreaCode extends mongoose.Document {
   code: string;
   label: string;
@@ -308,6 +317,10 @@ const userAccountSchema = new mongoose.Schema({
   activatedBy: mongoose.Schema.Types.ObjectId,
   institutionName: String,
   nin: String,
+  facilityCell: { type: facilitySchema },
+  facilitySector: { type: facilitySchema },
+  facilityCity: { type: facilitySchema },
+  facilityState: { type: facilitySchema },
 });
 
 userAccountSchema.pre<IUserAccount>('save', function(next) {
