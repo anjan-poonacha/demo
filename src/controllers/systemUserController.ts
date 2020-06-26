@@ -56,7 +56,6 @@ export const login = catchAsync(async (req, res, next) => {
     userId,
     status: { $eq: 'active' },
   }).select('+password');
-  console.log(user);
 
   if (!user || !(await user.correctPassword(password, user.password!))) {
     return next(new AppError('Incorrect username or password', 401));
