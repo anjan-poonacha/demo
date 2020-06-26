@@ -25,7 +25,7 @@ const systemUserSchema = new mongoose.Schema<ISystemUser>({
     },
     default: 'active',
   },
-  userId: { type: String, required: true },
+  userId: { type: String, required: true, unique: true },
   password: {
     type: String,
     required: [true, 'Provide a password'],

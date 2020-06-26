@@ -58,7 +58,7 @@ export const login = catchAsync(async (req, res, next) => {
   }).select('+password');
 
   if (!user || !(await user.correctPassword(password, user.password!))) {
-    return next(new AppError('Incorrect username or password', 401));
+    return next(new AppError('Incorrect userId or password', 401));
   }
 
   // 3) If everything is OK, send token to client
