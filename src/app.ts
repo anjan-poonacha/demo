@@ -8,6 +8,7 @@ import AppError from './utils/appError';
 import superAdminRouter from './routes/superAdminRouter';
 import userRouter from './routes/userAccountRouter';
 import tokenRouter from './routes/tokenRouter';
+import systemRouter from './routes/systemUserRouter';
 
 const app = express();
 
@@ -25,6 +26,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+app.use('/auth/api/v1/systems', systemRouter);
 app.use('/auth/api/v1/admins', superAdminRouter);
 app.use('/auth/api/v1/users', userRouter);
 app.use('/api/v1/tokens', tokenRouter);
