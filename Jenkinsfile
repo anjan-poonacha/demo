@@ -11,7 +11,7 @@ pipeline {
 
     stage('Checkout Source') {
       steps {
-        git 'git@github.com:anjan-poonacha/demo.git'
+        git 'https://github.com/anjan-poonacha/demo.git'
       }
     }
 
