@@ -1,0 +1,95 @@
+---
+ # Source: auth/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: auth
+  labels:
+    chart: auth-0.1.0
+    app/name: auth
+    app/instance: auth
+    app/version: "latest"
+    app/managed-by: Helm
+---
+# Source: auth/templates/configMap.yaml
+apiVersion: v1
+data:
+  AUTH_SERVICE_HOST: node4
+  AUTH_SERVICE_PORT: "30001"
+  AUTH_SERIVCE_URL: auth-service
+  DATABASE_LOCAL: mongodb://mongod-0.mongodb-service.mongo.svc.cluster.local,mongod-1.mongodb-service.mongo.svc.cluster.local,mongod-2.mongodb-service.mongo.svc.cluster.local/crvs
+  JWT_EXPIRES_IN: 90d
+  NODE_ENV: production
+  NOTIFY_HOST: node3
+  NOTIFY_PORT: "30010"
+  NOTIFY_SERVICE_URL: notify-service
+  PORT: "3001"
+  USER_SERVICE_PORT: "30002"
+  USER_SERVICE_HOST: node3
+  USER_SERVICE_URL: user-service
+kind: ConfigMap
+metadata:
+  name: auth-cm
+---
+# Source: auth/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+  labels:
+    chart: auth-0.1.0
+    app/name: auth
+    app/instance: auth
+    app/version: "latest"
+    app/managed-by: Helm
+spec:
+  type: NodePort
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+      nodePort: 32323
+  selector:
+    app/name: auth
+    app/instance: auth
+---
+# Source: auth/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+  labels:
+    chart: auth-0.1.0
+    app/name: auth
+    app/instance: auth
+    app/version: "latest"
+    app/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app/name: auth
+      app/instance: auth
+  template:
+    metadata:
+      labels:
+        app/name: auth
+        app/instance: auth
+    spec:
+      serviceAccountName: auth
+      securityContext:
+        {}
+      containers:
+        - name: auth
+          securityContext:
+            {}
+          image: "docker.io/anjanadon/auth"
+          imagePullPolicy: Always
+          envFrom: 
+            - configMapRef: 
+                name: auth-cm
+            - secretRef: 
+                name: notify-secret
+            - secretRef: 
+                name: all-svc-secret
+
