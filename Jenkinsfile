@@ -7,21 +7,6 @@ pipeline {
 
   agent any
 
-  podTemplate(
-    label: 'mypod',
-    inheritFrom: 'default',
-    containers: [
-      containerTemplate(
-        name: 'docker',
-        image: 'docker:19',
-        command: 'cat'
-      )
-    ]
-
-  )
-
-
-
   stages {
 
     stage('Checkout Source') {
