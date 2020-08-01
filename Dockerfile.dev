@@ -1,7 +1,7 @@
-FROM node:alpine
+FROM node:slim
 WORKDIR '/app'
-RUN npm i typescript -g
+RUN npm i typescript pm2 -g
 COPY ./package.json ./
 RUN npm install
 COPY . .
-CMD ["npm", "run", "start:dev"]
+CMD ["pm2-runtime","npm", "--", "start"]`

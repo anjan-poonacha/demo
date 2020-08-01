@@ -26,4 +26,4 @@ pids
 *.pid.lock
 **/*.map
 package-lock.json
-
+**/*.env
